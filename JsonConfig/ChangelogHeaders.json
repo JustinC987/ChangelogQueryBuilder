@@ -1,0 +1,10 @@
+{
+    "ExternalId" : "ExternalId",
+    "ObjectType" : "ObjectType",
+    "Object" : "ObjectType",
+    "Name" : "Name",
+    "ChildObject" : "ChildObject",
+    "JiraTask" : "JiraTask",
+    "Date" : "Date",
+    "Initials" : "Initials"
+}

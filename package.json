@@ -1,0 +1,29 @@
+{
+  "name": "deployquerybuilder",
+  "version": "1.0.0",
+  "description": "Creates Where Clauses based on changelog excel document",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "type": "module"
+  },
+  "author": "Justin Clappsy",
+  "license": "ISC",
+  "bin": {
+    "cQuery": "./bin/queryBuilder"
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "chalk": "^4.1.0",
+    "commander": "^6.1.0",
+    "convert-excel-to-json": "^1.7.0",
+    "exceljs": "^4.1.1",
+    "xlsx": "^0.16.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.11.5",
+    "@babel/core": "^7.11.5",
+    "@babel/node": "^7.10.5",
+    "@babel/preset-env": "^7.11.5"
+  }
+}

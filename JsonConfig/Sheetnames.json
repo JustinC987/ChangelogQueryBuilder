@@ -1,0 +1,7 @@
+{
+    "sheetNames" : ["Config Data", "Metadata", "Bug Fixes", "Deprecated"],
+    "Metadata" : "Metadata",
+    "ConfigData" : "Config Data",
+    "BugFixes" : "Bug Fixes",
+    "Deprecated" : "Deprecated"
+}
