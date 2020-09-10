@@ -6,5 +6,9 @@
     "ChildObject" : "ChildObject",
     "JiraTask" : "JiraTask",
     "Date" : "Date",
-    "Initials" : "Initials"
-}
+    "Initials" : "Initials",
+    "Family" : "Family",
+    "Comments" : "Comments",
+    "DeployStatus" : "DeployStatus",
+    "JIRALabel" : "JIRALabel",
+    "JiraLabel" : "JiraLabel"}
