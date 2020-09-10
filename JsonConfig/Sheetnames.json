@@ -1,7 +1,15 @@
 {
-    "sheetNames" : ["Config Data", "Metadata", "Bug Fixes", "Deprecated"],
+    "sheetNames" : [
+        "Config Data", 
+        "Metadata", 
+        "Deprecated", 
+        "Config Data (Bug Fixes)",
+        "Manual Steps"
+    ],
     "Metadata" : "Metadata",
     "ConfigData" : "Config Data",
-    "BugFixes" : "Bug Fixes",
-    "Deprecated" : "Deprecated"
+    "ConfigDataBugFixes" : "Config Data (Bug Fixes)",
+    "Deprecated" : "Deprecated",
+    "BugFixes" : "Config Data (Bug Fixes)",
+    "ManualSteps" : "Manual Steps"
 }

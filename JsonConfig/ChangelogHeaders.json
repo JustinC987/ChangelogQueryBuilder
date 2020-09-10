@@ -1,10 +1,15 @@
 {
     "ExternalId" : "ExternalId",
     "ObjectType" : "ObjectType",
-    "Object" : "ObjectType",
+    "Object" : "Object",
     "Name" : "Name",
     "ChildObject" : "ChildObject",
     "JiraTask" : "JiraTask",
     "Date" : "Date",
-    "Initials" : "Initials"
+    "Initials" : "Initials",
+    "Family" : "Family",
+    "Comments" : "Comments",
+    "DeployStatus" : "DeployStatus",
+    "JIRALabel" : "JIRALabel",
+    "JiraLabel" : "JiraLabel"
 }
