@@ -1,106 +1,422 @@
 {
-    "Product" : "Product2",
-    "Product2" : "Product2",
-    "PriceList" : "Apttus_Config2__PriceList__c",
-    "Apttus_Config2__PriceList__c" : "Apttus_Config2__PriceList__c",
-    "PriceListItem" : "Apttus_Config2__PriceListItem__c",
-    "Apttus_Config2__PriceListItem__c" : "Apttus_Config2__PriceListItem__c",
-    "Category" : "Apttus_Config2__ClassificationName__c",
-    "Apttus_Config2__ClassificationName__c" : "Apttus_Config2__ClassificationName__c",
-    "CategoryHierarchy" : "Apttus_Config2__ClassificationHierarchy__c",
-    "Apttus_Config2__ClassificationHierarchy__c" : "Apttus_Config2__ClassificationHierarchy__c",
-    "ProductClassification" : "Apttus_Config2__ProductClassification__c",
-    "Apttus_Config2__ProductClassification__c" : "Apttus_Config2__ProductClassification__c",
-    "PriceListCategory" : "Apttus_Config2__PriceListCategory__c",
-    "Apttus_Config2__PriceListCategory__c" : "Apttus_Config2__PriceListCategory__c",
-    "ProductOptionGroup" : "Apttus_Config2__ProductOptionGroup__c",
-    "Apttus_Config2__ProductOptionGroup__c" : "Apttus_Config2__ProductOptionGroup__c",
-    "ProductOptionPrice" : "Apttus_Config2__ProductOptionPrice__c",
-    "Apttus_Config2__ProductOptionPrice__c" : "Apttus_Config2__ProductOptionPrice__c",
-    "ProductOptionComponent" : "Apttus_Config2__ProductOptionComponent__c",
-    "Apttus_Config2__ProductOptionComponent__c" : "Apttus_Config2__ProductOptionComponent__c",
-    "ProductGroup" : "Apttus_Config2__ProductGroup__c",
-    "Apttus_Config2__ProductGroup__c" : "Apttus_Config2__ProductGroup__c",
-    "ProductGroupMember" : "Apttus_Config2__ProductGroupMember__c",
-    "Apttus_Config2__ProductGroupMember__c" : "Apttus_Config2__ProductGroupMember__c",
-    "RelatedPriceListItem" : "Apttus_Config2__RelatedPriceListItem__c",
-    "Apttus_Config2__RelatedPriceListItem__c" : "Apttus_Config2__RelatedPriceListItem__c",
-    "FieldExpression" : "Apttus_Config2__FieldExpression__c",
-    "ConstraintRule" : "Apttus_Config2__ConstraintRule__c",
-    "Apttus_Config2__ConstraintRule__c" : "Apttus_Config2__ConstraintRule__c",
-    "ConstraintRuleAction" : "Apttus_Config2__ConstraintRuleAction__c",
-    "Apttus_Config2__ConstraintRuleAction__c" : "Apttus_Config2__ConstraintRuleAction__c",
-    "ConstraintRuleCondition" : "Apttus_Config2__ConstraintRuleCondition__c",
-    "Apttus_Config2__ConstraintRuleCondition__c" : "Apttus_Config2__ConstraintRuleCondition__c",
-    "ConstraintRuleActionExpression" : "Apttus_Config2__ConstraintRuleActionExpression__c",
-    "Apttus_Config2__ConstraintRuleActionExpression__c" : "Apttus_Config2__ConstraintRuleActionExpression__c",
-    "AttributeValueMatrix" : "Apttus_Config2__AttributeValueMatrix__c",
-    "Apttus_Config2__AttributeValueMatrix__c" : "Apttus_Config2__AttributeValueMatrix__c",
-    "AttributeValueMatrixEntry" : "Apttus_Config2__AttributeValueMatrixEntry__c",
-    "Apttus_Config2__AttributeValueMatrixEntry__c" : "Apttus_Config2__AttributeValueMatrixEntry__c",
-    "ProductAttributeGroup" : "Apttus_Config2__ProductAttributeGroup__c",
-    "Apttus_Config2__ProductAttributeGroup__c" : "Apttus_Config2__ProductAttributeGroup__c",
-    "ProductAttribute" : "Apttus_Config2__ProductAttribute__c",
-    "Apttus_Config2__ProductAttribute__c" : "Apttus_Config2__ProductAttribute__c",
-    "ProductAttributeGroupMember" : "Apttus_Config2__ProductAttributeGroupMember__c",
-    "Apttus_Config2__ProductAttributeGroupMember__c" : "Apttus_Config2__ProductAttributeGroupMember__c",
-    "PriceDimension" : "Apttus_Config2__PriceDimension__c",
-    "Apttus_Config2__PriceDimension__c" : "Apttus_Config2__PriceDimension__c",
-    "PriceRuleset" : "Apttus_Config2__PriceRuleset__c",
-    "Apttus_Config2__PriceRuleset__c" : "Apttus_Config2__PriceRuleset__c",
-    "PriceRule" : "Apttus_Config2__PriceRule__c",
-    "Apttus_Config2__PriceRule__c" : "Apttus_Config2__PriceRule__c",
-    "PriceRuleEntry" : "Apttus_Config2__PriceRuleEntry__c",
-    "Apttus_Config2__PriceRuleEntry__c" : "Apttus_Config2__PriceRuleEntry__c",
-    "FormulaField" : "Apttus_Config2__FormulaField__c",
-    "FormulaField(CPQ)" : "Apttus_Config2__FormulaField__c",
-    "Apttus_Config2__FormulaField__c" : "Apttus_Config2__FormulaField__c",
-    "PriceMatrix" : "Apttus_Config2__PriceMatrix__c",
-    "Apttus_Config2__PriceMatrix__c" : "Apttus_Config2__PriceMatrix__c",
-    "PriceMatrixEntry" : "Apttus_Config2__PriceMatrixEntry__c",
-    "Apttus_Config2__PriceMatrixEntry__c" : "Apttus_Config2__PriceMatrixEntry__c",
-    "ProductAttributeRule" : "Apttus_Config2__ProductAttributeRule__c",
-    "Apttus_Config2__ProductAttributeRule__c" : "Apttus_Config2__ProductAttributeRule__c",
-    "ProductAttributeRuleAction" : "Apttus_Config2__ProductAttributeRuleAction__c",
-    "Apttus_Config2__ProductAttributeRuleAction__c" : "Apttus_Config2__ProductAttributeRuleAction__c",
-    "SearchFilter(CPQ)" : "Apttus_Config2__SearchFilter__c",
-    "Apttus_Config2__SearchFilter__c " : "Apttus_Config2__SearchFilter__c",
-    "ConfigFlow" : "Apttus_Config2__ConfigFlow__c",
-    "Apttus_Config2__ConfigFlow__c" : "Apttus_Config2__ConfigFlow__c",
-    "ConfigCustomDisplayColumns" : "Apttus_Config2__ConfigCustomDisplayColumns__c",
-    "Apttus_Config2__ConfigCustomDisplayColumns__c" : "Apttus_Config2__ConfigCustomDisplayColumns__c",
-    "ConfigCustomDisplayActions" : "Apttus_Config2__ConfigCustomDisplayActions__c",
-    "Apttus_Config2__ConfigCustomDisplayActions__c" : "Apttus_Config2__ConfigCustomDisplayActions__c",
-    "ConfigSystemProperties" : "Apttus_Config2__ConfigSystemProperties__c",
-    "Apttus_Config2__ConfigSystemProperties__c" : "Apttus_Config2__ConfigSystemProperties__c",
-    "ConfigLineItemCustomFields" : "Apttus_Config2__ConfigLineItemCustomFields__c",
-    "Apttus_Config2__ConfigLineItemCustomFields__c" : "Apttus_Config2__ConfigLineItemCustomFields__c",
-    "FormulaField(Approvals)" : "Apttus_Approval__FormulaField__c",
-    "Apttus_Approval__FormulaField__c" : "Apttus_Approval__FormulaField__c",
-    "ApprovalRuleDimension" : "Apttus_Approval__ApprovalRuleDimension__c",
-    "Apttus_Approval__ApprovalRuleDimension__c" : "Apttus_Approval__ApprovalRuleDimension__c",
-    "ApprovalsCustomConfig" : "Apttus_Approval__ApprovalsCustomConfig__c",
-    "Apttus_Approval__ApprovalsCustomConfig__c" : "Apttus_Approval__ApprovalsCustomConfig__c",
-    "ApprovalsSystemProperties" : "Apttus_Approval__ApprovalsSystemProperties__c",
-    "Apttus_Approval__ApprovalsSystemProperties__c" : "Apttus_Approval__ApprovalsSystemProperties__c",
-    "SearchFilter(Approvals)" : "Apttus_Approval__SearchFilter__c",
-    "Apttus_Approval__SearchFilter__c" : "Apttus_Approval__SearchFilter__c",
-    "ApprovalRule" : "Apttus_Approval__ApprovalRule__c",
-    "Apttus_Approval__ApprovalRule__c" : "Apttus_Approval__ApprovalRule__c",
-    "ApprovalRuleEntry" : "Apttus_Approval__ApprovalRuleEntry__c",
-    "Apttus_Approval__ApprovalRuleEntry__c" : "Apttus_Approval__ApprovalRuleEntry__c",
-    "ApprovalRuleAssignee" : "Apttus_Approval__ApprovalRuleAssignee__c",
-    "Apttus_Approval__ApprovalRuleAssignee__c" : "Apttus_Approval__ApprovalRuleAssignee__c",
-    "ApprovalProcess" : "Apttus_Approval__Approval_Process__c",
-    "Apttus_Approval__Approval_Process__c" : "Apttus_Approval__Approval_Process__c",
-    "DeliveryMapping" : "Delivery_Mapping__c",
-    "Delivery_Mapping__c" : "Delivery_Mapping__c",
-    "ProductCategoryMapping" : "Product_Category_Mapping__c",
-    "Product_Category_Mapping__c" : "Product_Category_Mapping__c",
-    "ProductValidation" : "Product_Validation__c",
-    "Product_Validation__c" : "Product_Validation__c",
-    "SkuMapping" : "Sku_Mapping__c",
-    "Sku_Mapping__c" : "Sku_Mapping__c",
-    "ProductUpliftAmount" : "Product_Uplift_Amount__c",
-    "Product_Uplift_Amount__c" : "Product_Uplift_Amount__c"
+    "Product" : {
+        "objName" : "Product2",
+        "order" : 1
+    },
+    "Product2" : {
+        "objName" : "Product2",
+        "order" : 1
+    },
+    "PriceList" : {
+        "objName" : "Apttus_Config2__PriceList__c",
+        "order" : 10
+    },
+    "Apttus_Config2__PriceList__c" : {
+        "objName" : "Apttus_Config2__PriceList__c",
+        "order" : 10
+    },
+    "PriceListItem" : {
+        "objName" : "Apttus_Config2__PriceListItem__c",
+        "order" : 20
+    },
+    "Apttus_Config2__PriceListItem__c" : {
+        "objName" : "Apttus_Config2__PriceListItem__c",
+        "order" : 20
+    },
+    "Category" : {
+        "objName" : "Apttus_Config2__ClassificationName__c",
+        "order" : 30
+    },
+    "Apttus_Config2__ClassificationName__c" : {
+        "objName" : "Apttus_Config2__ClassificationName__c",
+        "order" : 30
+    },
+    "CategoryHierarchy" : {
+        "objName" : "Apttus_Config2__ClassificationHierarchy__c",
+        "order" : 40
+    },
+    "Apttus_Config2__ClassificationHierarchy__c" : {
+        "objName" : "Apttus_Config2__ClassificationHierarchy__c",
+        "order" : 40
+    },
+    "ProductClassification" : {
+        "objName" : "Apttus_Config2__ProductClassification__c",
+        "order" : 50
+    },
+    "Apttus_Config2__ProductClassification__c" : {
+        "objName" : "Apttus_Config2__ProductClassification__c",
+        "order" : 50
+    },
+    "PriceListCategory" : {
+        "objName" : "Apttus_Config2__PriceListCategory__c",
+        "order" : 60
+    },
+    "Apttus_Config2__PriceListCategory__c" : {
+        "objName" : "Apttus_Config2__PriceListCategory__c",
+        "order" : 60
+    },
+    "ProductOptionGroup" : {
+        "objName" : "Apttus_Config2__ProductOptionGroup__c",
+        "order" : 70
+    },
+    "Apttus_Config2__ProductOptionGroup__c" : {
+        "objName" : "Apttus_Config2__ProductOptionGroup__c",
+        "order" : 70
+    },
+    "ProductOptionPrice" : {
+        "objName" : "Apttus_Config2__ProductOptionPrice__c",
+        "order" : 80
+    },
+    "Apttus_Config2__ProductOptionPrice__c" : {
+        "objName" : "Apttus_Config2__ProductOptionPrice__c",
+        "order" : 80
+    },
+    "ProductOptionComponent" : {
+        "objName" : "Apttus_Config2__ProductOptionComponent__c",
+        "order" : 90
+    },
+    "Apttus_Config2__ProductOptionComponent__c" : {
+        "objName" : "Apttus_Config2__ProductOptionComponent__c",
+        "order" : 90
+    },
+    "ProductGroup" : {
+        "objName" : "Apttus_Config2__ProductGroup__c",
+        "order" : 100
+    },
+    "Apttus_Config2__ProductGroup__c" : {
+        "objName" : "Apttus_Config2__ProductGroup__c",
+        "order" : 100
+    },
+    "ProductGroupMember" : {
+        "objName" : "Apttus_Config2__ProductGroupMember__c",
+        "order" : 110
+    },
+    "Apttus_Config2__ProductGroupMember__c" : {
+        "objName" : "Apttus_Config2__ProductGroupMember__c",
+        "order" : 110
+    },
+    "RelatedPriceListItem" : {
+        "objName" : "Apttus_Config2__RelatedPriceListItem__c",
+        "order" : 120
+    },
+    "Apttus_Config2__RelatedPriceListItem__c" : {
+        "objName" : "Apttus_Config2__RelatedPriceListItem__c",
+        "order" : 120
+    },
+    "FieldExpression" : {
+        "objName" : "Apttus_Config2__FieldExpression__c",
+        "order" : 130
+    },
+    "Apttus_Config2__FieldExpression__c" : {
+        "objName" : "Apttus_Config2__FieldExpression__c",
+        "order" : 130
+    },
+    "ConstraintRule" : {
+        "objName" : "Apttus_Config2__ConstraintRule__c",
+        "order" : 140
+    },
+    "Apttus_Config2__ConstraintRule__c" : {
+        "objName" : "Apttus_Config2__ConstraintRule__c",
+        "order" : 140
+    },
+    "ConstraintRuleAction" : {
+        "objName" : "Apttus_Config2__ConstraintRuleAction__c",
+        "order" : 150
+    },
+    "Apttus_Config2__ConstraintRuleAction__c" : {
+        "objName" : "Apttus_Config2__ConstraintRuleAction__c",
+        "order" : 150
+    },
+    "ConstraintRuleCondition" : {
+        "objName" : "Apttus_Config2__ConstraintRuleCondition__c",
+        "order" : 160
+    },
+    "Apttus_Config2__ConstraintRuleCondition__c" : {
+        "objName" : "Apttus_Config2__ConstraintRuleCondition__c",
+        "order" : 160
+    },
+    "ConstraintRuleActionExpression" : {
+        "objName" : "Apttus_Config2__ConstraintRuleActionExpression__c",
+        "order" : 170
+    },
+    "Apttus_Config2__ConstraintRuleActionExpression__c" : {
+        "objName" : "Apttus_Config2__ConstraintRuleActionExpression__c",
+        "order" : 170
+    },
+    "AttributeValueMatrix" : {
+        "objName" : "Apttus_Config2__AttributeValueMatrix__c",
+        "order" : 180
+    },
+    "Apttus_Config2__AttributeValueMatrix__c" : {
+        "objName" : "Apttus_Config2__AttributeValueMatrix__c",
+        "order" : 180
+    },
+    "AttributeValueMatrixEntry" : {
+        "objName" : "Apttus_Config2__AttributeValueMatrixEntry__c",
+        "order" : 190
+    },
+    "Apttus_Config2__AttributeValueMatrixEntry__c" : {
+        "objName" : "Apttus_Config2__AttributeValueMatrixEntry__c",
+        "order" : 190
+    },
+    "ProductAttributeGroup" : {
+        "objName" : "Apttus_Config2__ProductAttributeGroup__c",
+        "order" : 200
+    },
+    "Apttus_Config2__ProductAttributeGroup__c" : {
+        "objName" : "Apttus_Config2__ProductAttributeGroup__c",
+        "order" : 200
+    },
+    "ProductAttribute" : {
+        "objName" : "Apttus_Config2__ProductAttribute__c",
+        "order" : 210
+    },
+    "Apttus_Config2__ProductAttribute__c" : {
+        "objName" : "Apttus_Config2__ProductAttribute__c",
+        "order" : 210
+    },
+    "ProductAttributeGroupMember" : {
+        "objName" : "Apttus_Config2__ProductAttributeGroupMember__c",
+        "order" : 220
+    },
+    "Apttus_Config2__ProductAttributeGroupMember__c" : {
+        "objName" : "Apttus_Config2__ProductAttributeGroupMember__c",
+        "order" : 220
+    },
+    "PriceDimension" : {
+        "objName" : "Apttus_Config2__PriceDimension__c",
+        "order" : 230
+    },
+    "Apttus_Config2__PriceDimension__c" : {
+        "objName" : "Apttus_Config2__PriceDimension__c",
+        "order" : 230
+    },
+    "PriceRuleset" : {
+        "objName" : "Apttus_Config2__PriceRuleset__c",
+        "order" : 240
+    },
+    "Apttus_Config2__PriceRuleset__c" : {
+        "objName" : "Apttus_Config2__PriceRuleset__c",
+        "order" : 240
+    },
+    "PriceRule" : {
+        "objName" : "Apttus_Config2__PriceRule__c",
+        "order" : 250
+    },
+    "Apttus_Config2__PriceRule__c" : {
+        "objName" : "Apttus_Config2__PriceRule__c",
+        "order" : 250
+    },
+    "PriceRuleEntry" : {
+        "objName" : "Apttus_Config2__PriceRuleEntry__c",
+        "order" : 260
+    },
+    "Apttus_Config2__PriceRuleEntry__c" : {
+        "objName" : "Apttus_Config2__PriceRuleEntry__c",
+        "order" : 260
+    },
+    "FormulaField" : {
+        "objName" : "Apttus_Config2__FormulaField__c",
+        "order" : 270
+    },
+    "FormulaField(CPQ)" : {
+        "objName" : "Apttus_Config2__FormulaField__c",
+        "order" : 270
+    },
+    "Apttus_Config2__FormulaField__c" : {
+        "objName" : "Apttus_Config2__FormulaField__c",
+        "order" : 270
+    },
+    "PriceMatrix" : {
+        "objName" : "Apttus_Config2__PriceMatrix__c",
+        "order" : 280
+    },
+    "Apttus_Config2__PriceMatrix__c" : {
+        "objName" : "Apttus_Config2__PriceMatrix__c",
+        "order" : 280
+    },
+    "PriceMatrixEntry" : {
+        "objName" : "Apttus_Config2__PriceMatrixEntry__c",
+        "order" : 290
+    },
+    "Apttus_Config2__PriceMatrixEntry__c" : {
+        "objName" : "Apttus_Config2__PriceMatrixEntry__c",
+        "order" : 290
+    },
+    "ProductAttributeRule" : {
+        "objName" : "Apttus_Config2__ProductAttributeRule__c",
+        "order" : 300
+    },
+    "Apttus_Config2__ProductAttributeRule__c" : {
+        "objName" : "Apttus_Config2__ProductAttributeRule__c",
+        "order" : 300
+    },
+    "ProductAttributeRuleAction" : {
+        "objName" : "Apttus_Config2__ProductAttributeRuleAction__c",
+        "order" : 310
+    },
+    "Apttus_Config2__ProductAttributeRuleAction__c" : {
+        "objName" : "Apttus_Config2__ProductAttributeRuleAction__c",
+        "order" : 310
+    },
+    "SearchFilter(CPQ)" : {
+        "objName" : "Apttus_Config2__SearchFilter__c",
+        "order" : 320
+    },
+    "Apttus_Config2__SearchFilter__c " : {
+        "objName" : "Apttus_Config2__SearchFilter__c",
+        "order" : 320
+    },
+    "ConfigFlow" : {
+        "objName" : "Apttus_Config2__ConfigFlow__c",
+        "order" : 330
+    },
+    "Apttus_Config2__ConfigFlow__c" : {
+        "objName" : "Apttus_Config2__ConfigFlow__c",
+        "order" : 330
+    },
+    "ConfigCustomDisplayColumns" : {
+        "objName" : "Apttus_Config2__ConfigCustomDisplayColumns__c",
+        "order" : 340
+    },
+    "Apttus_Config2__ConfigCustomDisplayColumns__c" : {
+        "objName" : "Apttus_Config2__ConfigCustomDisplayColumns__c",
+        "order" : 340
+    },
+    "ConfigCustomDisplayActions" : {
+        "objName" : "Apttus_Config2__ConfigCustomDisplayActions__c",
+        "order" : 350
+    },
+    "Apttus_Config2__ConfigCustomDisplayActions__c" : {
+        "objName" : "Apttus_Config2__ConfigCustomDisplayActions__c",
+        "order" : 350
+    },
+    "ConfigSystemProperties" : {
+        "objName" : "Apttus_Config2__ConfigSystemProperties__c",
+        "order" : 360
+    },
+    "Apttus_Config2__ConfigSystemProperties__c" : {
+        "objName" : "Apttus_Config2__ConfigSystemProperties__c",
+        "order" : 360
+    },
+    "ConfigLineItemCustomFields" : {
+        "objName" : "Apttus_Config2__ConfigLineItemCustomFields__c",
+        "order" : 370
+    },
+    "Apttus_Config2__ConfigLineItemCustomFields__c" : {
+        "objName" : "Apttus_Config2__ConfigLineItemCustomFields__c",
+        "order" : 370
+    },
+    "FormulaField(Approvals)" : {
+        "objName" : "Apttus_Approval__FormulaField__c",
+        "order" : 380
+    },
+    "Apttus_Approval__FormulaField__c" : {
+        "objName" : "Apttus_Approval__FormulaField__c",
+        "order" : 380
+    },
+    "ApprovalRuleDimension" : {
+        "objName" : "Apttus_Approval__ApprovalRuleDimension__c",
+        "order" : 390
+    },
+    "Apttus_Approval__ApprovalRuleDimension__c" : {
+        "objName" : "Apttus_Approval__ApprovalRuleDimension__c",
+        "order" : 390
+    },
+    "ApprovalsCustomConfig" : {
+        "objName" : "Apttus_Approval__ApprovalsCustomConfig__c",
+        "order" : 400
+    },
+    "Apttus_Approval__ApprovalsCustomConfig__c" : {
+        "objName" : "Apttus_Approval__ApprovalsCustomConfig__c",
+        "order" : 400
+    },
+    "ApprovalsSystemProperties" : {
+        "objName" : "Apttus_Approval__ApprovalsSystemProperties__c",
+        "order" : 410
+    },
+    "Apttus_Approval__ApprovalsSystemProperties__c" : {
+        "objName" : "Apttus_Approval__ApprovalsSystemProperties__c",
+        "order" : 410
+    },
+    "SearchFilter(Approvals)" : {
+        "objName" : "Apttus_Approval__SearchFilter__c",
+        "order" : 420
+    },
+    "Apttus_Approval__SearchFilter__c" : {
+        "objName" : "Apttus_Approval__SearchFilter__c",
+        "order" : 420
+    },
+    "ApprovalRule" : {
+        "objName" : "Apttus_Approval__ApprovalRule__c",
+        "order" : 430
+    },
+    "Apttus_Approval__ApprovalRule__c" : {
+        "objName" : "Apttus_Approval__ApprovalRule__c",
+        "order" : 430
+    },
+    "ApprovalRuleEntry" : {
+        "objName" : "Apttus_Approval__ApprovalRuleEntry__c",
+        "order" : 440
+    },
+    "Apttus_Approval__ApprovalRuleEntry__c" : {
+        "objName" : "Apttus_Approval__ApprovalRuleEntry__c",
+        "order" : 440
+    },
+    "ApprovalRuleAssignee" : {
+        "objName" : "Apttus_Approval__ApprovalRuleAssignee__c",
+        "order" : 450
+    },
+    "Apttus_Approval__ApprovalRuleAssignee__c" : {
+        "objName" : "Apttus_Approval__ApprovalRuleAssignee__c",
+        "order" : 450
+    },
+    "ApprovalProcess" : {
+        "objName" : "Apttus_Approval__Approval_Process__c",
+        "order" : 460
+    },
+    "Apttus_Approval__Approval_Process__c" : {
+        "objName" : "Apttus_Approval__Approval_Process__c",
+        "order" : 460
+    },
+    "DeliveryMapping" : {
+        "objName" : "Delivery_Mapping__c",
+        "order" : 470
+    },
+    "Delivery_Mapping__c" : {
+        "objName" : "Delivery_Mapping__c",
+        "order" : 470
+    },
+    "ProductCategoryMapping" : {
+        "objName" : "Product_Category_Mapping__c",
+        "order" : 480
+    },
+    "Product_Category_Mapping__c" : {
+        "objName" : "Product_Category_Mapping__c",
+        "order" : 480
+    },
+    "ProductValidation" : {
+        "objName" : "Product_Validation__c",
+        "order" : 490
+    },
+    "Product_Validation__c" : {
+        "objName" : "Product_Validation__c",
+        "order" : 490
+    },
+    "SkuMapping" : {
+        "objName" : "Sku_Mapping__c",
+        "order" : 500
+    },
+    "Sku_Mapping__c" : {
+        "objName" : "Sku_Mapping__c",
+        "order" : 500
+    },
+    "ProductUpliftAmount" : {
+        "objName" : "Product_Uplift_Amount__c",
+        "order" : 510
+    },
+    "Product_Uplift_Amount__c" : {
+        "objName" : "Product_Uplift_Amount__c",
+        "order" : 510
+    }
 }
