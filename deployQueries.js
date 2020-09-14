@@ -5,6 +5,7 @@ const XLSX = require('xlsx');
 const objectNames = require('./JsonConfig/ObjectNames.json');
 const sheetsConfig = require('./JsonConfig/Sheetnames.json');
 const headerConfig = require('./JsonConfig/ChangelogHeaders.json');
+const appConfig = require('./JsonConfig/Config.json');
 
 async function createQueries(tickets, date, fileName) {
     var data = [];
@@ -28,8 +29,7 @@ async function createQueries(tickets, date, fileName) {
 async function getExcelData() {
     var wb = new excel.Workbook();
     //TODO: move to config
-    var filePath = 'C:/Users/jclappsy/Desktop/Change_Log_Moodys_CAO_CV.xlsx'
-   // var filePath = 'C:/Users/jclappsy/Desktop/TestQueries2.xlsx'
+    var filePath = appConfig.changelogFilePath;
     var excelData = [];
     await wb.xlsx.readFile(filePath);
     var sheetNames = sheetsConfig.sheetNames;
@@ -77,6 +77,7 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
 const createConfigDataObjArray = (sheet, configData, jiraTickets, date ) => {
 
     let headerKeys = createHeaders(sheet);
+    let missingObjNames = [];
 
     sheet.eachRow(function(row, rowNumber) {
         let rowObj = {};
@@ -114,9 +115,15 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date ) => {
                 // This key value is used to lookup the api name of the obj
                 // This ensures entries like Custom Object and Custom_Object__c yield the same value
                 if(objectTypeKey !== '' && rowObj[objectTypeKey]) {
-                    let objectTypeString = capitalizeStrings(rowObj[objectTypeKey]);
+                    let objectTypeString = rowObj[objectTypeKey].toLowerCase();
                     objectTypeString = removeSpaces(objectTypeString);
-                    rowObj[objectTypeKey] = objectNames[objectTypeString];
+
+                    if(objectNames[objectTypeString]) {
+                        rowObj[objectTypeKey] = objectNames[objectTypeString].objName;
+                        rowObj.objOrder = objectNames[objectTypeString].order;
+                    } else {
+                        missingObjNames.push(objectTypeString);
+                    }
                 }
             });
 
@@ -128,6 +135,16 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date ) => {
         } 
     });
 
+    /*
+        If User enters an obj name in the excel doc that does not exist as a key in ObjectNames.json, the row will be missed
+        If data is missing, you can debug by uncommenting the lines below.
+        This prints each object name from the excel file that does not exist in the ObjectNames.json
+        Add the name as a key if appliciable
+    */
+
+    checkForMissingObjNames(missingObjNames);
+
+
     return configData;
 }
 
@@ -136,16 +153,13 @@ const createConfigDeloyQueries = (configData, fileName) => {
 
     configData.forEach(row => {
 
-        let objectNameKey = row[headerConfig.ObjectType];
+        let objectNameKey = row[headerConfig.ObjectType].toLowerCase();
+        let mapKey = row[headerConfig.ObjectType].toLowerCase();
 
-        if(queryDict[row[headerConfig.ObjectType]]) {
-            let queryDictObj = queryDict[row[headerConfig.ObjectType]];
+        if(queryDict[mapKey]) {
+            let queryDictObj = queryDict[mapKey];
             if(row[headerConfig.ObjectType]) {
                 //TODO move to function
-
-               // console.log(row.ExternalID);
-
-
                 if(row.ExternalID) {
                     queryDictObj[objectNameKey].ExternalIds.push(row.ExternalID);
                 } else {
@@ -158,12 +172,14 @@ const createConfigDeloyQueries = (configData, fileName) => {
                 [objectNameKey] : {
                     ObjectApiName: '',
                     ExternalIds: [],
-                    Names: []
+                    Names: [],
+                    DeployOrder: 0
                 }
             }
 
             //TODO move to function
             rowObj[objectNameKey].ObjectApiName = row.ObjectType;
+            rowObj[objectNameKey].DeployOrder = row.objOrder;
 
             if(row.ExternalID) {
                 rowObj[objectNameKey].ExternalIds.push(row.ExternalID);
@@ -176,20 +192,22 @@ const createConfigDeloyQueries = (configData, fileName) => {
         }
     });
 
-    createDeployQueriesTextFile(queryDict, fileName);
+    sortedDictionaryKeys = sortQueryDict(queryDict);
+
+    createDeployQueriesTextFile(queryDict, fileName, sortedDictionaryKeys);
 
 }
 
 
-async function createDeployQueriesTextFile(queryDict, fileName) {
+async function createDeployQueriesTextFile(queryDict, fileName, sortedDictionaryKeys) {
     try {
-        await createTextFile(queryDict, fileName);
+        await createTextFile(queryDict, fileName, sortedDictionaryKeys);
     } catch(error) {
         console.log(`createDeployQueriesTextFile ${error}`);
     }
 }
 
-async function createTextFile(queryDict, fileName) {
+async function createTextFile(queryDict, fileName, sortedDictionaryKeys) {
     //TODO: Use current directory
     var filePath = 'C:/Users/jclappsy/Desktop'
     //let queryString = '';
@@ -197,12 +215,12 @@ async function createTextFile(queryDict, fileName) {
     let divider1 = '_______________________________________'
     let divider2 = '-------------------------'
 
+    //console.log('CREATING TEXT FILE');
 
-    console.log('CREATING TEXT FILE')
-
-    for (const [key, value] of Object.entries(queryDict)) {
+    sortedDictionaryKeys.forEach(key => {
         let queryString = '';
-        //console.log(key, value);
+        let value = queryDict[key];
+
         if(objectNames[key]) {
             queryString += `${divider1}\n\n${divider2}\n${value[key].ObjectApiName}\n${divider2}\n\n`;
 
@@ -228,15 +246,17 @@ async function createTextFile(queryDict, fileName) {
 
         queryString += '\n\n';
         queryStringArray.push(queryString);
-      }
+        
+    });
 
-      finalQueryString = '';
+    finalQueryString = '';
 
-      queryStringArray.forEach(string => {
-        finalQueryString += string;
-    })
+    queryStringArray.forEach(string => {
+      finalQueryString += string;
+    });
 
     fs.writeFileSync('C:/Users/jclappsy/Desktop/deployqueries.txt', finalQueryString);
+    console.log('Text File Created.');
 }
 
 const createWhereClause = (queryString, data, divider1, divider2) => {
@@ -277,7 +297,6 @@ const removeSpaces = (string) => {
     }
 }
 
-
 const convertDateString = (date) => {
     // remove leading 0s
     let dateStringArray = date.split('/');
@@ -311,6 +330,34 @@ const capitalizeStrings = (objectTypeString) => {
     return newStringArray.join(' ');
 }
 
+const lowerCaseAndJoinStrings = (objectTypeString) => {
+    let stringArray = objectTypeString.split(' ');
+    let newStringArray = [];
 
+    for(let i = 0; i < stringArray.length; i++) {
+        newStringArray.push(objectTypeString.toLowerCase());
+    }
+
+    return newStringArray.join(' ');
+}
+
+const checkForMissingObjNames = (objNames) => {
+    console.log('...Checking for missing object names...')
+    if(objNames.length > 0) {
+        objNames.forEach(name => {
+            console.log(name);
+        })
+    } else {
+        console.log('No missing object names! :-)');
+    }
+}
+
+const sortQueryDict = (queryDict) => {
+    let sortedDictKeys = Object.keys(queryDict).sort(function(a,b) {
+       return queryDict[a][a].DeployOrder - queryDict[b][b].DeployOrder;;
+    });
+
+    return sortedDictKeys;
+}
 
 module.exports = {createQueries};
