@@ -21,7 +21,6 @@ async function createQueries(tickets, date, fileName) {
     processExcelData(data, jiraTickets, epochDate, fileName);
 }
 
-
 /*
     Retrives Excel data synchronously
 */
@@ -50,7 +49,7 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
 
     // iterate through data var. This contains all sheets and their data
     data.forEach(sheet => {
-    //    console.log('SHEET: ', sheet.name);
+       console.log('SHEET: ', sheet.name);
 
         switch(sheet.name) {
             case sheetsConfig.ConfigData :
@@ -144,7 +143,6 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date ) => {
 
     checkForMissingObjNames(missingObjNames);
 
-
     return configData;
 }
 
@@ -155,6 +153,7 @@ const createConfigDeloyQueries = (configData, fileName) => {
 
         let objectNameKey = row[headerConfig.ObjectType].toLowerCase();
         let mapKey = row[headerConfig.ObjectType].toLowerCase();
+        let childObjLookupKey = row.ExternalID ? row.ExternalID : row.Name
 
         if(queryDict[mapKey]) {
             let queryDictObj = queryDict[mapKey];
@@ -165,37 +164,59 @@ const createConfigDeloyQueries = (configData, fileName) => {
                 } else {
                     queryDictObj[objectNameKey].Names.push(row.Name);
                 }
+                //TODO move to function
+                if(row.ChildObjects) {
+                    if(queryDictObj[objectNameKey].ChildObjectData[childObjLookupKey]) {
+                        queryDictObj[objectNameKey].ChildObjectData[childObjLookupKey].childObjInfo.push(row.ChildObjects);
+                    } else {
+                        queryDictObj[objectNameKey].ChildObjectData = {
+                            [childObjLookupKey] : {
+                                childObjInfo: [row.ChildObjects]
+                            }
+                        }
+                    }
+                }
             }
         } else {
+
+            ///////// Handle new Object Type
 
             let rowObj = {
                 [objectNameKey] : {
                     ObjectApiName: '',
                     ExternalIds: [],
                     Names: [],
-                    DeployOrder: 0
+                    DeployOrder: 0,
+                    ChildObjectData: {}
                 }
             }
 
-            //TODO move to function
             rowObj[objectNameKey].ObjectApiName = row.ObjectType;
             rowObj[objectNameKey].DeployOrder = row.objOrder;
 
+            //TODO move to function
             if(row.ExternalID) {
-                rowObj[objectNameKey].ExternalIds.push(row.ExternalID);
+                rowObj[objectNameKey].ExternalIds.push(row.ExternalID);   
             } else {
                 rowObj[objectNameKey].Names.push(row.Name);
             }
 
-            queryDict[objectNameKey] = rowObj;
+            //TODO move to function
+            if(row.ChildObjects) {
+                rowObj[objectNameKey].ChildObjectData = {
+                    [childObjLookupKey] : {
+                        childObjInfo: [row.ChildObjects]
+                    }
+                }
+            }
 
+            queryDict[objectNameKey] = rowObj;
         }
     });
 
     sortedDictionaryKeys = sortQueryDict(queryDict);
 
     createDeployQueriesTextFile(queryDict, fileName, sortedDictionaryKeys);
-
 }
 
 
@@ -215,8 +236,6 @@ async function createTextFile(queryDict, fileName, sortedDictionaryKeys) {
     let divider1 = '_______________________________________'
     let divider2 = '-------------------------'
 
-    //console.log('CREATING TEXT FILE');
-
     sortedDictionaryKeys.forEach(key => {
         let queryString = '';
         let value = queryDict[key];
@@ -227,6 +246,12 @@ async function createTextFile(queryDict, fileName, sortedDictionaryKeys) {
             const hasIdsAndNames = value[key].ExternalIds.length !== 0 && value[key].Names.length !== 0;
             const hasIdsOnly = value[key].ExternalIds.length !== 0 && value[key].Names.length === 0
             const hasNamesOnly = value[key].ExternalIds.length === 0 && value[key].Names.length !== 0
+            const hasChildObjectInfo = Object.keys(value[key].ChildObjectData).length !== 0;
+
+            if(hasChildObjectInfo) {
+                queryString += 'Child Object Information:\n';
+                queryString += creatChildObjectsList(value[key].ChildObjectData);
+            }
             
             if(hasIdsAndNames) {
                 queryString += 'Conversion_Ref_Id__c IN ('
@@ -255,7 +280,7 @@ async function createTextFile(queryDict, fileName, sortedDictionaryKeys) {
       finalQueryString += string;
     });
 
-    fs.writeFileSync('C:/Users/jclappsy/Desktop/deployqueries.txt', finalQueryString);
+    fs.writeFileSync(appConfig.deployQueriesFilePath, finalQueryString);
     console.log('Text File Created.');
 }
 
@@ -268,6 +293,29 @@ const createWhereClause = (queryString, data, divider1, divider2) => {
     queryString += `) \n\n${divider2}\n${divider2}\n\n${divider1}`
 
     return queryString;
+}
+
+const creatChildObjectsList = (childObjDataObj) => {
+    let childObjInfoString = '';
+    let childObjDataObjKeyLength = Object.entries(childObjDataObj).length;
+    let keyCount = 0;
+
+    for(let key in childObjDataObj) {
+        childObjInfoString += `${key}: `
+        childObjDataObj[key].childObjInfo.forEach(function (entry, i) {
+            childObjInfoString += i !== childObjDataObj[key].childObjInfo.length -1 ? `${entry}, ` : `${entry}`
+        });
+
+       keyCount += 1;
+
+       if(keyCount === childObjDataObjKeyLength) {
+           childObjInfoString += '\n'
+       }
+    }
+
+    childObjInfoString += '\n';
+
+    return childObjInfoString;
 }
 
 
@@ -287,6 +335,7 @@ const createHeaders = (sheet) => {
         headerValues.push(h);
    });
 
+   // Add a fake string to header values array to account blank number column. This will ensure header keys line up with data.
    headerValues.unshift('FirstEmptyCol')
    return headerValues;
 }
@@ -317,28 +366,6 @@ const convertDateString = (date) => {
 const convertJiraTicketsString = (tickets) => {
     let ticketsArray = tickets.split(',');
     return ticketsArray;
-}
-
-const capitalizeStrings = (objectTypeString) => {
-    let stringArray = objectTypeString.split(' ');
-    let newStringArray = [];
-
-    for(let i = 0; i < stringArray.length; i++) {
-        newStringArray.push(stringArray[i].charAt(0).toUpperCase()+stringArray[i].slice(1));
-    }
-
-    return newStringArray.join(' ');
-}
-
-const lowerCaseAndJoinStrings = (objectTypeString) => {
-    let stringArray = objectTypeString.split(' ');
-    let newStringArray = [];
-
-    for(let i = 0; i < stringArray.length; i++) {
-        newStringArray.push(objectTypeString.toLowerCase());
-    }
-
-    return newStringArray.join(' ');
 }
 
 const checkForMissingObjNames = (objNames) => {
