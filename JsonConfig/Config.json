@@ -1,3 +1,4 @@
 {
-    "changelogFilePath" : "C:/Users/jclappsy/Desktop/Change_Log_Moodys_CAO_CV.xlsx"
+    "changelogFilePath" : "C:/Users/jclappsy/Desktop/TestQueries2.xlsx",
+    "deployQueriesFilePath" : "C:/Users/jclappsy/Desktop/deployqueries.txt"
 }
