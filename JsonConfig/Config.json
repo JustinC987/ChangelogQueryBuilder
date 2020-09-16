@@ -1,4 +1,5 @@
 {
     "changelogFilePath" : "C:/Users/jclappsy/Desktop/TestQueries2.xlsx",
-    "deployQueriesFilePath" : "C:/Users/jclappsy/Desktop/deployqueries.txt"
+    "deployQueriesFilePath" : "C:/Users/jclappsy/Desktop/deployqueries.txt",
+    "deprecationQueriesFilePath" : "C:/Users/jclappsy/Desktop/deprecationQueries.txt"
 }

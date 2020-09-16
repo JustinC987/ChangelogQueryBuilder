@@ -6,6 +6,7 @@ const objectNames = require('./JsonConfig/ObjectNames.json');
 const sheetsConfig = require('./JsonConfig/Sheetnames.json');
 const headerConfig = require('./JsonConfig/ChangelogHeaders.json');
 const appConfig = require('./JsonConfig/Config.json');
+const metadataObjValues = require('./JsonConfig/MetadataObjectValues.json');
 
 async function createQueries(tickets, date, fileName) {
     var data = [];
@@ -27,7 +28,6 @@ async function createQueries(tickets, date, fileName) {
 
 async function getExcelData() {
     var wb = new excel.Workbook();
-    //TODO: move to config
     var filePath = appConfig.changelogFilePath;
     var excelData = [];
     await wb.xlsx.readFile(filePath);
@@ -45,11 +45,11 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
     // Create DeployQueries.txt
     let configData = [];
     // Create DeprecationQueries.txt
-    let deprecatedData = [];
+    let deprecationData = [];
 
     // iterate through data var. This contains all sheets and their data
     data.forEach(sheet => {
-       console.log('SHEET: ', sheet.name);
+    //    console.log('SHEET: ', sheet.name);
 
         switch(sheet.name) {
             case sheetsConfig.ConfigData :
@@ -63,17 +63,21 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
             // case sheetsConfig.Metadata :
             //     console.log('creating metadata');
             //     break;
-            // case sheetsConfig.Deprecated :
-            //     console.log('generating queries for Deprecated');
-            //     break;
+            case sheetsConfig.Deprecated :
+                console.log('generating queries for Deprecated');
+                deprecationData = createConfigDataObjArray(sheet, deprecationData, jiraTickets, epochDate);
+                break;
         }
     })
 
-    // create queries
-   createConfigDeloyQueries(configData, fileName);
+  // create where clauses
+  createDictObj(configData, fileName, 'ExternalID', 'ObjectType', 'Name', 'Config Data');
+  // create deprecation queries
+  createDictObj(deprecationData, fileName, 'APIFullName', 'MetadataType', '', 'Deprecated');
+
 }
 
-const createConfigDataObjArray = (sheet, configData, jiraTickets, date ) => {
+const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
 
     let headerKeys = createHeaders(sheet);
     let missingObjNames = [];
@@ -97,7 +101,10 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date ) => {
                 if(key === 'Object' || key === 'ObjectType') {
                     key = 'ObjectType';
                     objectTypeKey = key;
-                } 
+                } else if(key === 'MetadataType') {
+                    key = 'MetadataType';
+                    objectTypeKey = 'MetadataType';
+                }
 
                 rowObj[key] = row.values[i]
                 
@@ -146,41 +153,47 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date ) => {
     return configData;
 }
 
-const createConfigDeloyQueries = (configData, fileName) => {
-    let queryDict = {}
+const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, sheetType) => {
+    let queryDict = {};
 
     configData.forEach(row => {
+        let objectNameKey =  row[objTypeKey].toLowerCase();
+        let childObjLookupKey = '';
 
-        let objectNameKey = row[headerConfig.ObjectType].toLowerCase();
-        let mapKey = row[headerConfig.ObjectType].toLowerCase();
-        let childObjLookupKey = row.ExternalID ? row.ExternalID : row.Name
+        // For Config Data/ Bug Fixes Sheets
+        if(row.ExternalID) {
+            childObjLookupKey = row.ExternalID ? row.ExternalID : row.Name
+        }
 
-        if(queryDict[mapKey]) {
-            let queryDictObj = queryDict[mapKey];
-            if(row[headerConfig.ObjectType]) {
-                //TODO move to function
-                if(row.ExternalID) {
-                    queryDictObj[objectNameKey].ExternalIds.push(row.ExternalID);
-                } else {
-                    queryDictObj[objectNameKey].Names.push(row.Name);
-                }
-                //TODO move to function
-                if(row.ChildObjects) {
-                    if(queryDictObj[objectNameKey].ChildObjectData[childObjLookupKey]) {
-                        queryDictObj[objectNameKey].ChildObjectData[childObjLookupKey].childObjInfo.push(row.ChildObjects);
+        if(queryDict[objectNameKey]) {
+            let queryDictObj = queryDict[objectNameKey];
+                if(row[objTypeKey]) {
+                    //TODO move to function
+                    if(row[idKey]) {
+                        queryDictObj[objectNameKey].ExternalIds.push(row[idKey]);
+                    } else if(row[recordNameKey]) {
+                        queryDictObj[objectNameKey].Names.push(row[recordNameKey]);
                     } else {
-                        queryDictObj[objectNameKey].ChildObjectData = {
-                            [childObjLookupKey] : {
-                                childObjInfo: [row.ChildObjects]
+                        queryDictObj[objectNameKey].ExternalIds.push(`Error getting Id or Name for row: ${row.rowNumber}`);
+                    }
+
+                    //TODO move to function
+                    if(row.ChildObjects) {
+                        if(queryDictObj[objectNameKey].ChildObjectData[childObjLookupKey]) {
+                            queryDictObj[objectNameKey].ChildObjectData[childObjLookupKey].childObjInfo.push(row.ChildObjects);
+                        } else {
+                            queryDictObj[objectNameKey].ChildObjectData = {
+                                [childObjLookupKey] : {
+                                    childObjInfo: [row.ChildObjects]
+                                }
                             }
                         }
                     }
+
                 }
-            }
         } else {
-
-            ///////// Handle new Object Type
-
+            // Create new Object for Dictionary
+            
             let rowObj = {
                 [objectNameKey] : {
                     ObjectApiName: '',
@@ -191,14 +204,16 @@ const createConfigDeloyQueries = (configData, fileName) => {
                 }
             }
 
-            rowObj[objectNameKey].ObjectApiName = row.ObjectType;
+            rowObj[objectNameKey].ObjectApiName = row[objTypeKey];
             rowObj[objectNameKey].DeployOrder = row.objOrder;
 
             //TODO move to function
-            if(row.ExternalID) {
-                rowObj[objectNameKey].ExternalIds.push(row.ExternalID);   
+            if(row[idKey]) {
+                rowObj[objectNameKey].ExternalIds.push(row[idKey]);   
+            } else if(row[recordNameKey]){
+                rowObj[objectNameKey].Names.push(row[recordNameKey]);
             } else {
-                rowObj[objectNameKey].Names.push(row.Name);
+                rowObj[objectNameKey].ExternalIds.push(`Error getting id or name for row: ${row.rowNumber}`);   
             }
 
             //TODO move to function
@@ -211,37 +226,37 @@ const createConfigDeloyQueries = (configData, fileName) => {
             }
 
             queryDict[objectNameKey] = rowObj;
+
         }
     });
 
     sortedDictionaryKeys = sortQueryDict(queryDict);
-
-    createDeployQueriesTextFile(queryDict, fileName, sortedDictionaryKeys);
+    createTextFile(queryDict, fileName, sortedDictionaryKeys, sheetType);
 }
 
-
-async function createDeployQueriesTextFile(queryDict, fileName, sortedDictionaryKeys) {
+async function createTextFile(queryDict, fileName, sortedDictionaryKeys, sheetType) {
     try {
-        await createTextFile(queryDict, fileName, sortedDictionaryKeys);
+        await createConfigDataTextFile(queryDict, fileName, sortedDictionaryKeys, sheetType);
     } catch(error) {
         console.log(`createDeployQueriesTextFile ${error}`);
     }
 }
 
-async function createTextFile(queryDict, fileName, sortedDictionaryKeys) {
+async function createConfigDataTextFile(queryDict, fileName, sortedDictionaryKeys, sheetType) {
     //TODO: Use current directory
-    var filePath = 'C:/Users/jclappsy/Desktop'
-    //let queryString = '';
-    let queryStringArray = [];
+    let queryStringArray = [`${fileName}\n\n`];
     let divider1 = '_______________________________________'
     let divider2 = '-------------------------'
 
     sortedDictionaryKeys.forEach(key => {
-        let queryString = '';
         let value = queryDict[key];
+        let queryString = '';
+
+        console.log(value)
 
         if(objectNames[key]) {
             queryString += `${divider1}\n\n${divider2}\n${value[key].ObjectApiName}\n${divider2}\n\n`;
+            queryString += sheetType === 'Deprecated' ? `SELECT Id FROM ${key} WHERE ` : '';
 
             const hasIdsAndNames = value[key].ExternalIds.length !== 0 && value[key].Names.length !== 0;
             const hasIdsOnly = value[key].ExternalIds.length !== 0 && value[key].Names.length === 0
@@ -267,6 +282,11 @@ async function createTextFile(queryDict, fileName, sortedDictionaryKeys) {
                 queryString += 'Name IN ('
                 queryString = createWhereClause(queryString, value[key].Names, divider1, divider2);
             }
+        } else if(metadataObjValues[key]){
+            // Handle metadata that needs to be deleted
+            value[key].ExternalIds.forEach(string => {
+                queryString += `${string}\n`
+            })
         }
 
         queryString += '\n\n';
@@ -280,7 +300,9 @@ async function createTextFile(queryDict, fileName, sortedDictionaryKeys) {
       finalQueryString += string;
     });
 
-    fs.writeFileSync(appConfig.deployQueriesFilePath, finalQueryString);
+    let filePath = sheetType === 'Deprecated' ? appConfig.deprecationQueriesFilePath : appConfig.deployQueriesFilePath
+
+    fs.writeFileSync(filePath, finalQueryString);
     console.log('Text File Created.');
 }
 
