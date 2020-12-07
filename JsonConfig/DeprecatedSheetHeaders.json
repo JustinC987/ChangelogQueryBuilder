@@ -1,9 +1,0 @@
-{
-    "APIFullName" : "APIFullName",
-    "MetadataType" : "MetadataType",
-    "Initials" : "Initials",
-    "Date" : "Date",
-    "JIRATask" : "JIRATask",
-    "JiraTask" : "JiraTask",
-    "Status/DeprecatedFrom" : "Status/DeprecatedFrom"
-}
