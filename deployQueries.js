@@ -81,6 +81,7 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
 
     let headerKeys = createHeaders(sheet);
     let missingObjNames = [];
+    let invalidRows = [];
 
     sheet.eachRow(function(row, rowNumber) {
         let rowObj = {};
@@ -128,13 +129,17 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
                         rowObj[objectTypeKey] = objectNames[objectTypeString].objName;
                         rowObj.objOrder = objectNames[objectTypeString].order;
                     } else {
-                        missingObjNames.push(objectTypeString);
+                       // missingObjNames.push(objectTypeString);
+                        //invalidRows.push(rowObj.rowNumber);
+                        invalidRows.push(rowObj);
                     }
                 }
             });
 
             // Filter by Jira Task and Date
-            if(rowObj[headerConfig.Date] >= date &&  jiraTickets.includes(rowObj[headerConfig.JiraTask])) {                
+
+
+            if(rowObj[headerConfig.Date] >= date &&  jiraTickets.includes(rowObj[headerConfig.JiraTask])) { 
                 configData.push(rowObj);
             }
 
@@ -148,7 +153,8 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
         Add the name as a key if appliciable
     */
 
-    checkForMissingObjNames(missingObjNames);
+   // checkForMissingObjNames(missingObjNames);
+    checkForInvalidRows(invalidRows, jiraTickets);
 
     return configData;
 }
@@ -157,7 +163,12 @@ const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, s
     let queryDict = {};
 
     configData.forEach(row => {
-        let objectNameKey =  row[objTypeKey].toLowerCase();
+
+        let objectNameKey = '';
+
+        row[objTypeKey] ? objectNameKey =  row[objTypeKey].toLowerCase() : 'Object Name Not Found' ;
+
+        //let objectNameKey =  row[objTypeKey].toLowerCase();
         let childObjLookupKey = '';
 
         // For Config Data/ Bug Fixes Sheets
@@ -252,10 +263,9 @@ async function createConfigDataTextFile(queryDict, fileName, sortedDictionaryKey
         let value = queryDict[key];
         let queryString = '';
 
-        console.log(value)
-
         if(objectNames[key]) {
             queryString += `${divider1}\n\n${divider2}\n${value[key].ObjectApiName}\n${divider2}\n\n`;
+
             queryString += sheetType === 'Deprecated' ? `SELECT Id FROM ${key} WHERE ` : '';
 
             const hasIdsAndNames = value[key].ExternalIds.length !== 0 && value[key].Names.length !== 0;
@@ -398,6 +408,25 @@ const checkForMissingObjNames = (objNames) => {
         })
     } else {
         console.log('No missing object names! :-)');
+    }
+}
+
+const checkForInvalidRows = (invalidRows, jiraTickets) => {
+    //TODO Use a dict for jria tickets
+    console.log('...Checking Invalid Rows...');
+    if(invalidRows.length > 0) {
+        invalidRows.forEach(row => {
+            jiraTickets.forEach(ticket => {
+                if(row.JiraTask && row.JiraTask === ticket) {
+                    console.log(`Row Number: ${row.rowNumber}`);
+                    console.log(`Sheet ${row.sheetName}`);
+                    console.log(`Object Type: ${row.ObjectType}`)
+                    console.log(`Jira Ticket: ${row.JiraTask}\n`)
+                }
+
+            })
+
+        })
     }
 }
 

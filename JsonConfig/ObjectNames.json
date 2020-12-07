@@ -7,6 +7,10 @@
         "objName" : "Product2",
         "order" : 1
     },
+    "product2__c" : {
+        "objName" : "Product2",
+        "order" : 1
+    },
     "pricelist" : {
         "objName" : "Apttus_Config2__PriceList__c",
         "order" : 10
@@ -32,6 +36,10 @@
         "order" : 30
     },
     "categoryhierarchy" : {
+        "objName" : "Apttus_Config2__ClassificationHierarchy__c",
+        "order" : 40
+    },
+    "cateogryhierarchy" : {
         "objName" : "Apttus_Config2__ClassificationHierarchy__c",
         "order" : 40
     },
@@ -66,6 +74,10 @@
     "productoptiongroup" : {
         "objName" : "Apttus_Config2__ProductOptionGroup__c",
         "order" : 70
+    },
+    "optiongroup" : {
+    "objName" : "Apttus_Config2__ProductOptionGroup__c",
+    "order" : 70
     },
     "apttus_config2__productoptiongroup__c" : {
         "objName" : "Apttus_Config2__ProductOptionGroup__c",
@@ -107,11 +119,19 @@
         "objName" : "Apttus_Config2__RelatedPriceListItem__c",
         "order" : 120
     },
+    "relatedpriceitem" : {
+        "objName" : "Apttus_Config2__RelatedPriceListItem__c",
+        "order" : 120
+    },
     "apttus_config2__relatedpricelistitem__c" : {
         "objName" : "Apttus_Config2__RelatedPriceListItem__c",
         "order" : 120
     },
     "fieldexpression" : {
+        "objName" : "Apttus_Config2__FieldExpression__c",
+        "order" : 130
+    },
+    "fieldexpressions" : {
         "objName" : "Apttus_Config2__FieldExpression__c",
         "order" : 130
     },
@@ -124,6 +144,10 @@
         "order" : 130
     },
     "constraintrule" : {
+        "objName" : "Apttus_Config2__ConstraintRule__c",
+        "order" : 140
+    },
+    "constrainrule" : {
         "objName" : "Apttus_Config2__ConstraintRule__c",
         "order" : 140
     },
@@ -288,6 +312,10 @@
         "order" : 310
     },
     "searchfilter(cpq)" : {
+        "objName" : "Apttus_Config2__SearchFilter__c",
+        "order" : 320
+    },
+    "searchfilter" : {
         "objName" : "Apttus_Config2__SearchFilter__c",
         "order" : 320
     },
