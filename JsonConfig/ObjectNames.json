@@ -235,40 +235,40 @@
         "objName" : "Apttus_Config2__PriceDimension__c",
         "order" : 230
     },
-    "priceruleset" : {
-        "objName" : "Apttus_Config2__PriceRuleset__c",
-        "order" : 240
-    },
-    "apttus_config2__priceruleset__c" : {
-        "objName" : "Apttus_Config2__PriceRuleset__c",
-        "order" : 240
-    },
-    "pricerule" : {
-        "objName" : "Apttus_Config2__PriceRule__c",
-        "order" : 250
-    },
-    "apttus_config2__pricerule__c" : {
-        "objName" : "Apttus_Config2__PriceRule__c",
-        "order" : 250
-    },
-    "priceruleentry" : {
-        "objName" : "Apttus_Config2__PriceRuleEntry__c",
-        "order" : 260
-    },
-    "apttus_config2__priceruleentry__c" : {
-        "objName" : "Apttus_Config2__PriceRuleEntry__c",
-        "order" : 260
-    },
     "formulafield" : {
         "objName" : "Apttus_Config2__FormulaField__c",
-        "order" : 270
+        "order" : 240
     },
     "formulafield(cpq)" : {
         "objName" : "Apttus_Config2__FormulaField__c",
-        "order" : 270
+        "order" : 240
     },
     "apttus_config2__formulafield__c" : {
         "objName" : "Apttus_Config2__FormulaField__c",
+        "order" : 240
+    },
+    "priceruleset" : {
+        "objName" : "Apttus_Config2__PriceRuleset__c",
+        "order" : 250
+    },
+    "apttus_config2__priceruleset__c" : {
+        "objName" : "Apttus_Config2__PriceRuleset__c",
+        "order" : 250
+    },
+    "pricerule" : {
+        "objName" : "Apttus_Config2__PriceRule__c",
+        "order" : 260
+    },
+    "apttus_config2__pricerule__c" : {
+        "objName" : "Apttus_Config2__PriceRule__c",
+        "order" : 260
+    },
+    "priceruleentry" : {
+        "objName" : "Apttus_Config2__PriceRuleEntry__c",
+        "order" : 270
+    },
+    "apttus_config2__priceruleentry__c" : {
+        "objName" : "Apttus_Config2__PriceRuleEntry__c",
         "order" : 270
     },
     "pricematrix" : {
