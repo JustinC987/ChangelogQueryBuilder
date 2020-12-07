@@ -84,6 +84,7 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
 
     sheet.eachRow(function(row, rowNumber) {
         let rowObj = {};
+        let objectTypeKey = '';
 
         if(rowNumber !== 1) {
             // create row object
@@ -91,8 +92,6 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
             // set row number attribute to highlight row after queries are created
                 rowObj.rowNumber = rowNumber;
                 rowObj.sheetName = sheet.name;
-
-                let objectTypeKey = '';
 
                 // Use map to check object type. Some sheets have different header names.
                 // TODO: Come up with better way to handle Header Names :,(
@@ -127,17 +126,28 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
                     if(objectNames[objectTypeString]) {
                         rowObj[objectTypeKey] = objectNames[objectTypeString].objName;
                         rowObj.objOrder = objectNames[objectTypeString].order;
-                    } else {
+                    } /* uncomment to analyse invalid rows for the entire excel document 
+                    else {
                         invalidRows.push(rowObj);
-                    }
+                    }*/
                 }
             });
 
             // Filter by Jira Task and Date
             if(rowObj[headerConfig.Date] >= date &&  jiraTickets.includes(rowObj[headerConfig.JiraTask])) { 
-                configData.push(rowObj);
-            }
+                if(rowObj[objectTypeKey]) {
+                    let objectTypeString = rowObj[objectTypeKey].toLowerCase();
+                    objectTypeString = removeSpaces(objectTypeString);
+                    if(!objectNames[objectTypeString]) {
+                        invalidRows.push(rowObj);
+                    } else {
+                        configData.push(rowObj);
+                    }
+                } else {
+                    invalidRows.push(rowObj);
+                }
 
+            }
         } 
     });
 
