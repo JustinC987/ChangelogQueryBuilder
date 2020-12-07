@@ -274,17 +274,17 @@ async function createConfigDataTextFile(queryDict, fileName, sortedDictionaryKey
             
             if(hasIdsAndNames) {
                 queryString += 'Conversion_Ref_Id__c IN ('
-                queryString = createWhereClause(queryString, value[key].ExternalIds, divider1, divider2);
+                queryString = createWhereClause(queryString, value[key].ExternalIds, divider1, divider2, hasIdsAndNames);
                 queryString += ' OR Name IN ('
-                queryString = createWhereClause(queryString, value[key].Names, divider1, divider2);
+                queryString = createWhereClause(queryString, value[key].Names, divider1, divider2, false);
             } 
             else if(hasIdsOnly) {
                 queryString += 'Conversion_Ref_Id__c IN ('
-                queryString = createWhereClause(queryString, value[key].ExternalIds, divider1, divider2);
+                queryString = createWhereClause(queryString, value[key].ExternalIds, divider1, divider2, hasIdsAndNames);
             }
             else if(hasNamesOnly) {
                 queryString += 'Name IN ('
-                queryString = createWhereClause(queryString, value[key].Names, divider1, divider2);
+                queryString = createWhereClause(queryString, value[key].Names, divider1, divider2, hasIdsAndNames);
             }
         } else if(metadataObjValues[key]){
             // Handle metadata that needs to be deleted
@@ -310,13 +310,18 @@ async function createConfigDataTextFile(queryDict, fileName, sortedDictionaryKey
     console.log(`Text file created for ${sheetType}`);
 }
 
-const createWhereClause = (queryString, data, divider1, divider2) => {
+const createWhereClause = (queryString, data, divider1, divider2, hasIdsAndNames) => {
 
     data.forEach(function(value, index) {
         queryString += index + 1 === data.length ?  `'${value}'` :  `'${value}',\n`
     })
 
-    queryString += `) \n\n${divider2}\n${divider2}\n\n${divider1}`
+    if(hasIdsAndNames) {
+        queryString += `) \n\n`;
+    } else {
+        queryString += `) \n\n${divider2}\n${divider2}\n\n${divider1}`;
+    }
+
 
     return queryString;
 }
