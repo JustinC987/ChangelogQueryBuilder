@@ -134,7 +134,7 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
             });
 
             // Filter by Jira Task and Date
-            if(rowObj[headerConfig.Date] >= date &&  jiraTickets.includes(rowObj[headerConfig.JiraTask])) { 
+            if(rowObj[headerConfig.Date] >= date &&  jiraTickets.includes(rowObj[headerConfig.JiraTask].toUpperCase())) { 
                 if(rowObj[objectTypeKey]) {
                     let objectTypeString = rowObj[objectTypeKey].toLowerCase();
                     objectTypeString = removeSpaces(objectTypeString);
