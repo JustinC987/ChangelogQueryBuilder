@@ -1,7 +1,5 @@
-const chalk = require("chalk");
 const excel = require('exceljs');
 const fs = require('fs');
-const XLSX = require('xlsx');
 const objectNames = require('./JsonConfig/ObjectNames.json');
 const sheetsConfig = require('./JsonConfig/Sheetnames.json');
 const headerConfig = require('./JsonConfig/ChangelogHeaders.json');
@@ -47,6 +45,7 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
     // Create DeprecationQueries.txt
     let deprecationData = [];
 
+    console.log('-----------------------------------')
     // iterate through data var. This contains all sheets and their data
     data.forEach(sheet => {
     //    console.log('SHEET: ', sheet.name);
@@ -68,9 +67,10 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
                 deprecationData = createConfigDataObjArray(sheet, deprecationData, jiraTickets, epochDate);
                 break;
         }
-    })
+    });
+    console.log('-----------------------------------')
 
-  // create where clauses
+  // create where clauses for config data
   createDictObj(configData, fileName, 'ExternalID', 'ObjectType', 'Name', 'Config Data');
   // create deprecation queries
   createDictObj(deprecationData, fileName, 'APIFullName', 'MetadataType', '', 'Deprecated');
@@ -80,7 +80,6 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
 const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
 
     let headerKeys = createHeaders(sheet);
-    let missingObjNames = [];
     let invalidRows = [];
 
     sheet.eachRow(function(row, rowNumber) {
@@ -129,16 +128,12 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
                         rowObj[objectTypeKey] = objectNames[objectTypeString].objName;
                         rowObj.objOrder = objectNames[objectTypeString].order;
                     } else {
-                       // missingObjNames.push(objectTypeString);
-                        //invalidRows.push(rowObj.rowNumber);
                         invalidRows.push(rowObj);
                     }
                 }
             });
 
             // Filter by Jira Task and Date
-
-
             if(rowObj[headerConfig.Date] >= date &&  jiraTickets.includes(rowObj[headerConfig.JiraTask])) { 
                 configData.push(rowObj);
             }
@@ -153,96 +148,95 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
         Add the name as a key if appliciable
     */
 
-   // checkForMissingObjNames(missingObjNames);
     checkForInvalidRows(invalidRows, jiraTickets);
 
     return configData;
 }
 
 const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, sheetType) => {
-    let queryDict = {};
+    if(configData.length > 0) {
+        let queryDict = {};
+        configData.forEach(row => {
 
-    configData.forEach(row => {
+            let objectNameKey = '';
 
-        let objectNameKey = '';
+            row[objTypeKey] ? objectNameKey =  row[objTypeKey].toLowerCase() : 'Object Name Not Found' ;
 
-        row[objTypeKey] ? objectNameKey =  row[objTypeKey].toLowerCase() : 'Object Name Not Found' ;
+            //let objectNameKey =  row[objTypeKey].toLowerCase();
+            let childObjLookupKey = '';
 
-        //let objectNameKey =  row[objTypeKey].toLowerCase();
-        let childObjLookupKey = '';
+            // For Config Data/ Bug Fixes Sheets
+            if(row.ExternalID) {
+                childObjLookupKey = row.ExternalID ? row.ExternalID : row.Name
+            }
 
-        // For Config Data/ Bug Fixes Sheets
-        if(row.ExternalID) {
-            childObjLookupKey = row.ExternalID ? row.ExternalID : row.Name
-        }
-
-        if(queryDict[objectNameKey]) {
-            let queryDictObj = queryDict[objectNameKey];
-                if(row[objTypeKey]) {
-                    //TODO move to function
-                    if(row[idKey]) {
-                        queryDictObj[objectNameKey].ExternalIds.push(row[idKey]);
-                    } else if(row[recordNameKey]) {
-                        queryDictObj[objectNameKey].Names.push(row[recordNameKey]);
-                    } else {
-                        queryDictObj[objectNameKey].ExternalIds.push(`Error getting Id or Name for row: ${row.rowNumber}`);
-                    }
-
-                    //TODO move to function
-                    if(row.ChildObjects) {
-                        if(queryDictObj[objectNameKey].ChildObjectData[childObjLookupKey]) {
-                            queryDictObj[objectNameKey].ChildObjectData[childObjLookupKey].childObjInfo.push(row.ChildObjects);
+            if(queryDict[objectNameKey]) {
+                let queryDictObj = queryDict[objectNameKey];
+                    if(row[objTypeKey]) {
+                        //TODO move to function
+                        if(row[idKey]) {
+                            queryDictObj[objectNameKey].ExternalIds.push(row[idKey]);
+                        } else if(row[recordNameKey]) {
+                            queryDictObj[objectNameKey].Names.push(row[recordNameKey]);
                         } else {
-                            queryDictObj[objectNameKey].ChildObjectData = {
-                                [childObjLookupKey] : {
+                            queryDictObj[objectNameKey].ExternalIds.push(`Error getting Id or Name for row: ${row.rowNumber}`);
+                        }
+
+                        //TODO move to function
+                
+                        if(row.ChildObjects) {
+                            if(queryDictObj[objectNameKey].ChildObjectData[childObjLookupKey]) {
+                                queryDictObj[objectNameKey].ChildObjectData[childObjLookupKey].childObjInfo.push(row.ChildObjects);
+                            } else {
+                                queryDictObj[objectNameKey].ChildObjectData[childObjLookupKey] = {
                                     childObjInfo: [row.ChildObjects]
                                 }
                             }
                         }
+
                     }
-
-                }
-        } else {
-            // Create new Object for Dictionary
-            
-            let rowObj = {
-                [objectNameKey] : {
-                    ObjectApiName: '',
-                    ExternalIds: [],
-                    Names: [],
-                    DeployOrder: 0,
-                    ChildObjectData: {}
-                }
-            }
-
-            rowObj[objectNameKey].ObjectApiName = row[objTypeKey];
-            rowObj[objectNameKey].DeployOrder = row.objOrder;
-
-            //TODO move to function
-            if(row[idKey]) {
-                rowObj[objectNameKey].ExternalIds.push(row[idKey]);   
-            } else if(row[recordNameKey]){
-                rowObj[objectNameKey].Names.push(row[recordNameKey]);
             } else {
-                rowObj[objectNameKey].ExternalIds.push(`Error getting id or name for row: ${row.rowNumber}`);   
-            }
+                // Create new Object for Dictionary
+                
+                let rowObj = {
+                    [objectNameKey] : {
+                        ObjectApiName: '',
+                        ExternalIds: [],
+                        Names: [],
+                        DeployOrder: 0,
+                        ChildObjectData: {}
+                    }
+                }
 
-            //TODO move to function
-            if(row.ChildObjects) {
-                rowObj[objectNameKey].ChildObjectData = {
-                    [childObjLookupKey] : {
+                rowObj[objectNameKey].ObjectApiName = row[objTypeKey];
+                rowObj[objectNameKey].DeployOrder = row.objOrder;
+
+                //TODO move to function
+                if(row[idKey]) {
+                    rowObj[objectNameKey].ExternalIds.push(row[idKey]);   
+                } else if(row[recordNameKey]){
+                    rowObj[objectNameKey].Names.push(row[recordNameKey]);
+                } else {
+                    rowObj[objectNameKey].ExternalIds.push(`Error getting id or name for row: ${row.rowNumber}`);   
+                }
+
+                //TODO move to function
+                if(row.ChildObjects) {
+                    rowObj[objectNameKey].ChildObjectData[childObjLookupKey] = {
                         childObjInfo: [row.ChildObjects]
                     }
                 }
+
+
+                queryDict[objectNameKey] = rowObj;
+
             }
+        });
 
-            queryDict[objectNameKey] = rowObj;
-
-        }
-    });
-
-    sortedDictionaryKeys = sortQueryDict(queryDict);
-    createTextFile(queryDict, fileName, sortedDictionaryKeys, sheetType);
+        sortedDictionaryKeys = sortQueryDict(queryDict);
+        createTextFile(queryDict, fileName, sortedDictionaryKeys, sheetType);
+    }
+    
 }
 
 async function createTextFile(queryDict, fileName, sortedDictionaryKeys, sheetType) {
@@ -313,7 +307,7 @@ async function createConfigDataTextFile(queryDict, fileName, sortedDictionaryKey
     let filePath = sheetType === 'Deprecated' ? appConfig.deprecationQueriesFilePath : appConfig.deployQueriesFilePath
 
     fs.writeFileSync(filePath, finalQueryString);
-    console.log('Text File Created.');
+    console.log(`Text file created for ${sheetType}`);
 }
 
 const createWhereClause = (queryString, data, divider1, divider2) => {
@@ -328,6 +322,7 @@ const createWhereClause = (queryString, data, divider1, divider2) => {
 }
 
 const creatChildObjectsList = (childObjDataObj) => {
+
     let childObjInfoString = '';
     let childObjDataObjKeyLength = Object.entries(childObjDataObj).length;
     let keyCount = 0;
@@ -335,7 +330,7 @@ const creatChildObjectsList = (childObjDataObj) => {
     for(let key in childObjDataObj) {
         childObjInfoString += `${key}: `
         childObjDataObj[key].childObjInfo.forEach(function (entry, i) {
-            childObjInfoString += i !== childObjDataObj[key].childObjInfo.length -1 ? `${entry}, ` : `${entry}`
+            childObjInfoString += i !== childObjDataObj[key].childObjInfo.length -1 ? `${entry}, ` : `${entry}\n`
         });
 
        keyCount += 1;
@@ -400,17 +395,6 @@ const convertJiraTicketsString = (tickets) => {
     return ticketsArray;
 }
 
-const checkForMissingObjNames = (objNames) => {
-    console.log('...Checking for missing object names...')
-    if(objNames.length > 0) {
-        objNames.forEach(name => {
-            console.log(name);
-        })
-    } else {
-        console.log('No missing object names! :-)');
-    }
-}
-
 const checkForInvalidRows = (invalidRows, jiraTickets) => {
     //TODO Use a dict for jria tickets
     console.log('...Checking Invalid Rows...');
@@ -418,10 +402,12 @@ const checkForInvalidRows = (invalidRows, jiraTickets) => {
         invalidRows.forEach(row => {
             jiraTickets.forEach(ticket => {
                 if(row.JiraTask && row.JiraTask === ticket) {
+                    console.log('-----------')
                     console.log(`Row Number: ${row.rowNumber}`);
                     console.log(`Sheet ${row.sheetName}`);
                     console.log(`Object Type: ${row.ObjectType}`)
-                    console.log(`Jira Ticket: ${row.JiraTask}\n`)
+                    console.log(`Jira Ticket: ${row.JiraTask}`)
+                    console.log('-----------')
                 }
 
             })
