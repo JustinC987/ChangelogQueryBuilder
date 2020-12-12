@@ -18,7 +18,7 @@ async function createQueries(tickets, date, fileName) {
      }
 
     processExcelData(data, jiraTickets, epochDate, fileName);
-}
+} 
 
 /*
     Retrives Excel data synchronously
@@ -59,9 +59,10 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
                 console.log('generating queries for bug fixes');
                 configData = createConfigDataObjArray(sheet, configData, jiraTickets, epochDate);
                 break;
-            // case sheetsConfig.Metadata :
-            //     console.log('creating metadata');
-            //     break;
+            case sheetsConfig.Metadata :
+                console.log('creating metadata');
+                metadataData = createConfigDataObjArray(sheet, configData, jiraTickets, epochDate);
+                break;
             case sheetsConfig.Deprecated :
                 console.log('generating queries for Deprecated');
                 deprecationData = createConfigDataObjArray(sheet, deprecationData, jiraTickets, epochDate);
@@ -74,7 +75,29 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
   createDictObj(configData, fileName, 'ExternalID', 'ObjectType', 'Name', 'Config Data');
   // create deprecation queries
   createDictObj(deprecationData, fileName, 'APIFullName', 'MetadataType', '', 'Deprecated');
+  // create xml file for metadata
+  createMetadata(metadataData);
 
+}
+
+const createMetadata = (data) => {
+    let dictObj = {};
+    data.forEach(row => {
+        console.log('ROW: ' , row);
+        console.log('FORMULA FIELD: ' , row[headerConfig['Package']].result);
+        let metadataKey = row.MetadataType.toLowerCase();
+
+
+        if(dictObj[metadataKey]) {
+            dictObj[metadataKey].metadataEntries = dictObj[metadataKey].metadataEntries.filter(entry => entry !== row[headerConfig['Package']].result);
+        } else {
+            dictObj[metadataKey] = {
+                metadataEntries: [row[headerConfig['Package']].result],
+                metadataType: metadataObjValues[metadataKey].objName
+            }
+        }
+        console.log('dict obj: ', dictObj);
+    })
 }
 
 const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
@@ -119,6 +142,7 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
                 // Takes the Object Type entered in changelog and creates a Key Value
                 // This key value is used to lookup the api name of the obj
                 // This ensures entries like Custom Object and Custom_Object__c yield the same value
+                
                 if(objectTypeKey !== '' && rowObj[objectTypeKey]) {
                     let objectTypeString = rowObj[objectTypeKey].toLowerCase();
                     objectTypeString = removeSpaces(objectTypeString);
@@ -126,7 +150,9 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
                     if(objectNames[objectTypeString]) {
                         rowObj[objectTypeKey] = objectNames[objectTypeString].objName;
                         rowObj.objOrder = objectNames[objectTypeString].order;
-                    } /* uncomment to analyse invalid rows for the entire excel document 
+                    } else if (metadataObjValues[objectTypeString]) {
+                        rowObj[objectTypeKey] = metadataObjValues[objectTypeString].objName;
+                    }/* uncomment to analyse invalid rows for the entire excel document 
                     else {
                         invalidRows.push(rowObj);
                     }*/
@@ -134,11 +160,12 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
             });
 
             // Filter by Jira Task and Date
+            // TODO: Move filter logic to the above loop block as it is now redundant to check here
             if(rowObj[headerConfig.Date] >= date &&  jiraTickets.includes(rowObj[headerConfig.JiraTask].toUpperCase())) { 
                 if(rowObj[objectTypeKey]) {
                     let objectTypeString = rowObj[objectTypeKey].toLowerCase();
                     objectTypeString = removeSpaces(objectTypeString);
-                    if(!objectNames[objectTypeString]) {
+                    if(!objectNames[objectTypeString] && !metadataObjValues[objectTypeString]) {
                         invalidRows.push(rowObj);
                     } else {
                         configData.push(rowObj);
