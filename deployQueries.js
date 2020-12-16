@@ -76,32 +76,13 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
   // create deprecation queries
   createDictObj(deprecationData, fileName, 'APIFullName', 'MetadataType', '', 'Deprecated');
   // create xml file for metadata
-  createMetadata(metadataData);
+  createMetadata(metadataData, fileName);
 
 }
 
-const createMetadata = (data) => {
-    let dictObj = {};
-    data.forEach(row => {
-        console.log('ROW: ' , row);
-        console.log('FORMULA FIELD: ' , row[headerConfig['Package']].result);
-        let metadataKey = row.MetadataType.toLowerCase();
-
-
-        if(dictObj[metadataKey]) {
-            dictObj[metadataKey].metadataEntries = dictObj[metadataKey].metadataEntries.filter(entry => entry !== row[headerConfig['Package']].result);
-        } else {
-            dictObj[metadataKey] = {
-                metadataEntries: [row[headerConfig['Package']].result],
-                metadataType: metadataObjValues[metadataKey].objName
-            }
-        }
-        console.log('dict obj: ', dictObj);
-    })
-}
-
+// Creates an array of row objects based on Excel Sheet data (Uses sheet headers as object keys)
 const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
-
+    // console.log('SHEET: ' + sheet.name)
     let headerKeys = createHeaders(sheet);
     let invalidRows = [];
 
@@ -161,7 +142,7 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
 
             // Filter by Jira Task and Date
             // TODO: Move filter logic to the above loop block as it is now redundant to check here
-            if(rowObj[headerConfig.Date] >= date &&  jiraTickets.includes(rowObj[headerConfig.JiraTask].toUpperCase())) { 
+            if(rowObj[headerConfig.Date] >= date && jiraTickets.includes(rowObj[headerConfig.JiraTask].toUpperCase())) { 
                 if(rowObj[objectTypeKey]) {
                     let objectTypeString = rowObj[objectTypeKey].toLowerCase();
                     objectTypeString = removeSpaces(objectTypeString);
@@ -190,6 +171,7 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
     return configData;
 }
 
+// Creates a dictionary for Config Data (Deploy Queries)
 const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, sheetType) => {
     if(configData.length > 0) {
         let queryDict = {};
@@ -276,6 +258,49 @@ const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, s
     
 }
 
+const createMetadata = (data, fileName) => {
+    if(data.length > 0) {
+        let dictObj = {};
+        let dupeDict = {};
+        data.forEach(row => {
+            let metadataKey = row.MetadataType.toLowerCase();
+
+           if(!row[headerConfig['Package']]) {
+               row[headerConfig['Package']] = {result: `Pkg.xml column not popualted for row: ${row.rowNumber}`}
+           }
+    
+            if(dictObj[metadataKey]) {
+                // Handle Duplicate values
+                if(!dupeDict[row[headerConfig['Package']].result]) {
+                    dictObj[metadataKey].metadataEntries.push(row[headerConfig['Package']].result);
+                    dupeDict[row[headerConfig['Package']].result] = {
+                        result: row[headerConfig['Package']].result
+                    } 
+                }
+            } else {
+                dictObj[metadataKey] = {
+                    metadataEntries: [row[headerConfig['Package']].result],
+                    metadataType: metadataObjValues[metadataKey].objName
+                }
+                dupeDict[row[headerConfig['Package']].result] = {
+                    result: row[headerConfig['Package']].result
+                }
+            }
+        });
+
+        sortedMetadataKeys = sortMetadataDict(dictObj);
+        createMetadataXmlFile(dictObj, sortedMetadataKeys, fileName);
+    }
+}
+
+async function createMetadataXmlFile(dictObj, sortedMetadataKeys, fileName) {
+    try {
+        await createXmlFile(dictObj, sortedMetadataKeys, fileName);
+    } catch(error) {
+        console.log(`createMetadataXmlFile ${error}`);
+    }
+}
+
 async function createTextFile(queryDict, fileName, sortedDictionaryKeys, sheetType) {
     try {
         await createConfigDataTextFile(queryDict, fileName, sortedDictionaryKeys, sheetType);
@@ -346,6 +371,23 @@ async function createConfigDataTextFile(queryDict, fileName, sortedDictionaryKey
     fs.writeFileSync(filePath, finalQueryString);
     console.log(`Text file created for ${sheetType}`);
 }
+
+async function createXmlFile(dictObj, sortedMetadataKeys, fileName) {
+    let xmlString = `<?xml version="1.0" encoding="UTF-8"?>\n<Package xmlns="http://soap.sforce.com/2006/04/metadata">\n\n`
+    sortedMetadataKeys.forEach(key => {
+        xmlString += `\t<!-- ${dictObj[key].metadataType} -->\n`;
+        dictObj[key].metadataEntries.forEach(entry => {
+           xmlString += `\t${entry}\n`;
+        })
+        xmlString += '\n';
+    });
+
+    xmlString += `\t<version>${appConfig.apiVersion}</version>\n</Package>`
+    let filePath = `${appConfig.metadataFilePath}${fileName}.xml`
+    fs.writeFileSync(filePath, xmlString);
+    console.log('XML File created for Metadata');
+}
+
 
 const createWhereClause = (queryString, data, divider1, divider2, hasIdsAndNames) => {
 
@@ -464,6 +506,14 @@ const sortQueryDict = (queryDict) => {
     });
 
     return sortedDictKeys;
+}
+
+const sortMetadataDict = (dictObj) => {
+    let sortedMetadata = Object.keys(dictObj).sort(function(a,b) {
+        return dictObj[a].objName - dictObj[b].objName
+    })
+
+    return sortedMetadata
 }
 
 module.exports = {createQueries};
