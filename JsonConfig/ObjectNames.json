@@ -23,6 +23,10 @@
         "objName" : "Apttus_Config2__PriceListItem__c",
         "order" : 20
     },
+    "pli" : {
+        "objName" : "Apttus_Config2__PriceListItem__c",
+        "order" : 20
+    },
     "apttus_config2__pricelistitem__c" : {
         "objName" : "Apttus_Config2__PriceListItem__c",
         "order" : 20
@@ -228,6 +232,10 @@
         "order" : 220
     },
     "pricedimension" : {
+        "objName" : "Apttus_Config2__PriceDimension__c",
+        "order" : 230
+    },
+    "dimension" : {
         "objName" : "Apttus_Config2__PriceDimension__c",
         "order" : 230
     },

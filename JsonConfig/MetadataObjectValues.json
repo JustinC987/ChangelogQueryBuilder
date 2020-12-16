@@ -1,5 +1,56 @@
 {
-    "field" : "Custom Field",
-    "customfield" : "Custom Field",
-    "object" : "Object"
+    "field" :  {
+        "objName" : "CustomField"
+    },
+    "customfield" : {
+        "objName" : "CustomField"
+    },
+    "customobject" : {
+        "objName" : "CustomObject"
+    },
+    "customlabel" : {
+        "objName" : "CustomLabel"
+    },
+    "globalvalueset" : {
+        "objName" : "GlobalValueSet"
+    },
+    "layout" : {
+        "objName" : "Layout"
+    },
+    "apexclass" : {
+        "objName" : "ApexClass"
+    },
+    "apextrigger" : {
+        "objName" : "ApexTrigger"
+    },
+    "flow" : {
+        "objName" : "Flow"
+    },
+    "recordtype" : {
+        "objName" : "RecordType"
+    },
+    "fieldset" : {
+        "objName" : "FieldSet"
+    },
+    "validationrule" : {
+        "objName" : "ValidationRule"
+    },
+    "profile" : {
+        "objName" : "Profile"
+    },
+    "custommetadata" : {
+        "objName" : "CustomMetadata"
+    },
+    "auradefinitionbundle" : {
+        "objName" : "AuraDefinitionBundle"
+    },
+    "quickaction" : {
+        "objName" : "QuickAction"
+    },
+    "emailtemplate" : {
+        "objName" : "EmailTemplate"
+    },
+    "apexcomponent" : {
+        "objName" : "ApexComponent"
+    }
 }

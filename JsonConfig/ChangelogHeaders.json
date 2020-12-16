@@ -11,5 +11,6 @@
     "Comments" : "Comments",
     "DeployStatus" : "DeployStatus",
     "JIRALabel" : "JIRALabel",
-    "JiraLabel" : "JiraLabel"
+    "JiraLabel" : "JiraLabel",
+    "Package" : "Package.xml(DONOTEDIT)"
 }
