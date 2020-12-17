@@ -61,7 +61,7 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
                 break;
             case sheetsConfig.Metadata :
                 console.log('creating metadata');
-                metadataData = createConfigDataObjArray(sheet, configData, jiraTickets, epochDate);
+                metadataData = createConfigDataObjArray(sheet, metadataData, jiraTickets, epochDate);
                 break;
             case sheetsConfig.Deprecated :
                 console.log('generating queries for Deprecated');
