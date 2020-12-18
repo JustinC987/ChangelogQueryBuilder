@@ -5,6 +5,8 @@ const sheetsConfig = require('./JsonConfig/Sheetnames.json');
 const headerConfig = require('./JsonConfig/ChangelogHeaders.json');
 const appConfig = require('./JsonConfig/Config.json');
 const metadataObjValues = require('./JsonConfig/MetadataObjectValues.json');
+const metadDataProfiles = require('./JsonConfig/MetadataProfiles.json');
+
 
 async function createQueries(tickets, date, fileName) {
     var data = [];
@@ -374,6 +376,8 @@ async function createConfigDataTextFile(queryDict, fileName, sortedDictionaryKey
 
 async function createXmlFile(dictObj, sortedMetadataKeys, fileName) {
     let xmlString = `<?xml version="1.0" encoding="UTF-8"?>\n<Package xmlns="http://soap.sforce.com/2006/04/metadata">\n\n`
+    xmlString += createMetadataProfilesString();
+    
     sortedMetadataKeys.forEach(key => {
         xmlString += `\t<!-- ${dictObj[key].metadataType} -->\n`;
         dictObj[key].metadataEntries.forEach(entry => {
@@ -514,6 +518,15 @@ const sortMetadataDict = (dictObj) => {
     })
 
     return sortedMetadata
+}
+
+const createMetadataProfilesString = () => {
+    let profilesString = '\t<!-- Profiles -->\n';
+    metadDataProfiles.profiles.forEach(profile => {
+        profilesString += `\t<types><name>Profile</name><members>${profile}</members></types>\n`
+    });
+
+    return profilesString += '\n';
 }
 
 module.exports = {createQueries};

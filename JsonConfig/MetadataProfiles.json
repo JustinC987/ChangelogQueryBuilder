@@ -1,0 +1,25 @@
+{
+    "profiles" : [
+        "Admin",
+        "Product Specialist%2FAccount Manager",
+        "SAV Client Service",
+        "SAV Client Service Manager",
+        "Operations Analyst",
+        "Tax Team",
+        "Fulfillment Associate",
+        "Client Service Generalist",
+        "Client Service Manager",
+        "Client Service Specialist",
+        "Sales Manager",
+        "FPA Reporting",
+        "Sales Representative",
+        "Business Admin",
+        "Business Analyst",
+        "Data Management",
+        "Reporting",
+        "Tax Team",
+        "Product Management Restricted",
+        "Product Strategy %E2%80%93 Marketo Admin",
+        "Product Strategy %2F Product Management"
+    ]
+}
