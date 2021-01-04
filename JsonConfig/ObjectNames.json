@@ -115,6 +115,10 @@
         "objName" : "Apttus_Config2__ProductGroupMember__c",
         "order" : 110
     },
+    "productgroupmemeber" : {
+        "objName" : "Apttus_Config2__ProductGroupMember__c",
+        "order" : 110
+    },
     "apttus_config2__productgroupmember__c" : {
         "objName" : "Apttus_Config2__ProductGroupMember__c",
         "order" : 110
@@ -224,6 +228,10 @@
         "order" : 210
     },
     "productattributegroupmember" : {
+        "objName" : "Apttus_Config2__ProductAttributeGroupMember__c",
+        "order" : 220
+    },
+    "productattributegroupmemeber" : {
         "objName" : "Apttus_Config2__ProductAttributeGroupMember__c",
         "order" : 220
     },
