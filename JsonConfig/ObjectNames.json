@@ -55,6 +55,10 @@
         "objName" : "Apttus_Config2__ProductClassification__c",
         "order" : 50
     },
+    "productclassifications" : {
+        "objName" : "Apttus_Config2__ProductClassification__c",
+        "order" : 50
+    },
     "apttus_config2__productclassification__c" : {
         "objName" : "Apttus_Config2__ProductClassification__c",
         "order" : 50
