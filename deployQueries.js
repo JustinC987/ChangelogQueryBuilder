@@ -196,7 +196,7 @@ const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, s
                     if(row[objTypeKey]) {
                         //TODO move to function
                         if(row[idKey]) {
-                            queryDictObj[objectNameKey].ExternalIds.push(row[idKey]);
+                            queryDictObj[objectNameKey].ExternalIds.push(removeSpaces(row[idKey]));
                         } else if(row[recordNameKey]) {
                             queryDictObj[objectNameKey].Names.push(row[recordNameKey]);
                         } else {
@@ -234,7 +234,7 @@ const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, s
 
                 //TODO move to function
                 if(row[idKey]) {
-                    rowObj[objectNameKey].ExternalIds.push(row[idKey]);   
+                    rowObj[objectNameKey].ExternalIds.push(removeSpaces(row[idKey]));   
                 } else if(row[recordNameKey]){
                     rowObj[objectNameKey].Names.push(row[recordNameKey]);
                 } else {
