@@ -3,5 +3,6 @@
     "deployQueriesFilePath" : "C:/Users/jclappsy/Desktop/deployqueries.txt",
     "deprecationQueriesFilePath" : "C:/Users/jclappsy/Desktop/deprecationQueries.txt",
     "metadataFilePath" : "C:/Users/jclappsy/Desktop/",
+    "manualStepsFilePath" : "C:/Users/jclappsy/Desktop/ManualSteps.txt",
     "apiVersion" : 47.0
 }
