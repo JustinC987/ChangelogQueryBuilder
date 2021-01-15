@@ -203,7 +203,7 @@ const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, s
 
             // For Config Data/ Bug Fixes Sheets
             if(row.ExternalID) {
-                childObjLookupKey = row.ExternalID ? row.ExternalID : row.Name
+                childObjLookupKey = row.ExternalID ? removeNewLines(row.ExternalID) : removeNewLines(row.Name)
             }
 
             if(queryDict[objectNameKey]) {
@@ -211,9 +211,9 @@ const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, s
                     if(row[objTypeKey]) {
                         //TODO move to function
                         if(row[idKey]) {
-                            queryDictObj[objectNameKey].ExternalIds.push(removeSpaces(row[idKey]));
+                            queryDictObj[objectNameKey].ExternalIds.push(removeNewLines(removeSpaces(row[idKey])));
                         } else if(row[recordNameKey]) {
-                            queryDictObj[objectNameKey].Names.push(row[recordNameKey]);
+                            queryDictObj[objectNameKey].Names.push(removeNewLines(row[recordNameKey]));
                         } else {
                             queryDictObj[objectNameKey].ExternalIds.push(`Error getting Id or Name for row: ${row.rowNumber}`);
                         }
@@ -249,9 +249,9 @@ const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, s
 
                 //TODO move to function
                 if(row[idKey]) {
-                    rowObj[objectNameKey].ExternalIds.push(removeSpaces(row[idKey]));   
+                    rowObj[objectNameKey].ExternalIds.push(removeNewLines(removeSpaces(row[idKey])));   
                 } else if(row[recordNameKey]){
-                    rowObj[objectNameKey].Names.push(row[recordNameKey]);
+                    rowObj[objectNameKey].Names.push(removeNewLines(row[recordNameKey]));
                 } else {
                     rowObj[objectNameKey].ExternalIds.push(`Error getting id or name for row: ${row.rowNumber}`);   
                 }
@@ -457,9 +457,9 @@ const creatChildObjectsList = (childObjDataObj) => {
     let keyCount = 0;
 
     for(let key in childObjDataObj) {
-        childObjInfoString += `${key}: `
+        childObjInfoString += `${removeSpaces(key)}: `
         childObjDataObj[key].childObjInfo.forEach(function (entry, i) {
-            childObjInfoString += i !== childObjDataObj[key].childObjInfo.length -1 ? `${entry}, ` : `${entry}\n`
+            childObjInfoString += i !== childObjDataObj[key].childObjInfo.length -1 ? `${entry}, ` : `${removeSpaces(entry)}\n`
         });
 
        keyCount += 1;
@@ -568,6 +568,10 @@ const createMetadataProfilesString = () => {
     });
 
     return profilesString += '\n';
+}
+
+const removeNewLines = (string) => {
+    return string.includes('\n') ? string.replace('\n', '') : string;
 }
 
 module.exports = {createQueries};
