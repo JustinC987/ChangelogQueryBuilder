@@ -92,7 +92,7 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
 
 // Creates an array of row objects based on Excel Sheet data (Uses sheet headers as object keys)
 const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
-    console.log('SHEET: ' + sheet.name)
+    //console.log('SHEET: ' + sheet.name)
     let headerKeys = createHeaders(sheet);
     let invalidRows = [];
 
