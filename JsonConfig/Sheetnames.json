@@ -3,12 +3,10 @@
         "Config Data", 
         "Metadata", 
         "Deprecated", 
-        "Config Data (Bug Fixes)",
         "Manual Steps"
     ],
     "Metadata" : "Metadata",
     "ConfigData" : "Config Data",
-    "ConfigDataBugFixes" : "Config Data (Bug Fixes)",
     "Deprecated" : "Deprecated",
     "BugFixes" : "Config Data (Bug Fixes)",
     "ManualSteps" : "Manual Steps"
