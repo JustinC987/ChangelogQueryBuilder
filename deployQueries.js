@@ -159,6 +159,9 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
             if(sheet.name === sheetsConfig.ManualSteps && rowObj[headerConfig.JiraTask] && jiraTickets.includes(rowObj[headerConfig.JiraTask].toUpperCase())) {
                 configData.push(rowObj);
             } else {
+
+
+
                 if(rowObj[headerConfig.Date] >= date && jiraTickets.includes(rowObj[headerConfig.JiraTask].toUpperCase())) { 
                     if(rowObj[objectTypeKey]) {
                         let objectTypeString = rowObj[objectTypeKey].toLowerCase();
