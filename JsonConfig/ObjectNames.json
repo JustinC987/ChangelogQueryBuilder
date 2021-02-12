@@ -15,6 +15,10 @@
         "objName" : "Apttus_Config2__PriceList__c",
         "order" : 10
     },
+    "apttus_config2__pricelist__c" : {
+        "objName" : "Apttus_Config2__PriceList__c",
+        "order" : 10
+    },
     "apttus_config2__priceList__c" : {
         "objName" : "Apttus_Config2__PriceList__c",
         "order" : 10
@@ -123,13 +127,13 @@
         "objName" : "Apttus_Config2__ProductGroupMember__c",
         "order" : 110
     },
-    "apttus_config2__productgroupmember__c" : {
+    "productgroupmembers" : {
         "objName" : "Apttus_Config2__ProductGroupMember__c",
         "order" : 110
     },
-    "relatedpricelistitem" : {
-        "objName" : "Apttus_Config2__RelatedPriceListItem__c",
-        "order" : 120
+    "apttus_config2__productgroupmember__c" : {
+        "objName" : "Apttus_Config2__ProductGroupMember__c",
+        "order" : 110
     },
     "relatedpriceitem" : {
         "objName" : "Apttus_Config2__RelatedPriceListItem__c",

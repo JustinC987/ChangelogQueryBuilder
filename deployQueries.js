@@ -46,6 +46,8 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
     let configData = [];
     // Create DeprecationQueries.txt
     let deprecationData = [];
+    // Create ManualSteps.txt
+    let manualStepsData = [];
 
     console.log('-----------------------------------')
     // iterate through data var. This contains all sheets and their data
@@ -54,20 +56,24 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
 
         switch(sheet.name) {
             case sheetsConfig.ConfigData :
-                console.log('generating queries for config data');
+                console.log('Searching for config data');
                 configData = createConfigDataObjArray(sheet, configData, jiraTickets, epochDate);
                 break;
             case sheetsConfig.BugFixes :
-                console.log('generating queries for bug fixes');
+                console.log('Searching for bug fixes');
                 configData = createConfigDataObjArray(sheet, configData, jiraTickets, epochDate);
                 break;
             case sheetsConfig.Metadata :
-                console.log('creating metadata');
+                console.log('Searching for metadata');
                 metadataData = createConfigDataObjArray(sheet, metadataData, jiraTickets, epochDate);
                 break;
             case sheetsConfig.Deprecated :
-                console.log('generating queries for Deprecated');
+                console.log('Searching for Deprecated');
                 deprecationData = createConfigDataObjArray(sheet, deprecationData, jiraTickets, epochDate);
+                break;
+            case sheetsConfig.ManualSteps :
+                console.log('Searching for Manual Steps');
+                manualStepsData = createConfigDataObjArray(sheet, manualStepsData, jiraTickets, epochDate);
                 break;
         }
     });
@@ -79,12 +85,14 @@ const processExcelData = (data, jiraTickets, epochDate, fileName) => {
   createDictObj(deprecationData, fileName, 'APIFullName', 'MetadataType', '', 'Deprecated');
   // create xml file for metadata
   createMetadata(metadataData, fileName);
+  // create text file for Manual Steps
+  createManualSteps(manualStepsData, fileName);
 
 }
 
 // Creates an array of row objects based on Excel Sheet data (Uses sheet headers as object keys)
 const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
-    // console.log('SHEET: ' + sheet.name)
+    //console.log('SHEET: ' + sheet.name)
     let headerKeys = createHeaders(sheet);
     let invalidRows = [];
 
@@ -144,19 +152,29 @@ const createConfigDataObjArray = (sheet, configData, jiraTickets, date) => {
 
             // Filter by Jira Task and Date
             // TODO: Move filter logic to the above loop block as it is now redundant to check here
-            if(rowObj[headerConfig.Date] >= date && jiraTickets.includes(rowObj[headerConfig.JiraTask].toUpperCase())) { 
-                if(rowObj[objectTypeKey]) {
-                    let objectTypeString = rowObj[objectTypeKey].toLowerCase();
-                    objectTypeString = removeSpaces(objectTypeString);
-                    if(!objectNames[objectTypeString] && !metadataObjValues[objectTypeString]) {
-                        invalidRows.push(rowObj);
-                    } else {
-                        configData.push(rowObj);
-                    }
-                } else {
-                    invalidRows.push(rowObj);
-                }
 
+            // Ignore date and invalid row filters if sheet is manual steps
+            // TODO use switch cases for sheet types
+            // For now, else is used to test Manual Steps Sheet logic
+            if(sheet.name === sheetsConfig.ManualSteps && rowObj[headerConfig.JiraTask] && jiraTickets.includes(rowObj[headerConfig.JiraTask].toUpperCase())) {
+                configData.push(rowObj);
+            } else {
+
+
+
+                if(rowObj[headerConfig.Date] >= date && jiraTickets.includes(rowObj[headerConfig.JiraTask].toUpperCase())) { 
+                    if(rowObj[objectTypeKey]) {
+                        let objectTypeString = rowObj[objectTypeKey].toLowerCase();
+                        objectTypeString = removeSpaces(objectTypeString);
+                        if(!objectNames[objectTypeString] && !metadataObjValues[objectTypeString]) {
+                            invalidRows.push(rowObj);
+                        } else {
+                            configData.push(rowObj);
+                        }
+                    } else {
+                        invalidRows.push(rowObj);
+                    }
+                }
             }
         } 
     });
@@ -188,7 +206,7 @@ const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, s
 
             // For Config Data/ Bug Fixes Sheets
             if(row.ExternalID) {
-                childObjLookupKey = row.ExternalID ? row.ExternalID : row.Name
+                childObjLookupKey = row.ExternalID ? removeNewLines(row.ExternalID) : removeNewLines(row.Name)
             }
 
             if(queryDict[objectNameKey]) {
@@ -196,9 +214,9 @@ const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, s
                     if(row[objTypeKey]) {
                         //TODO move to function
                         if(row[idKey]) {
-                            queryDictObj[objectNameKey].ExternalIds.push(removeSpaces(row[idKey]));
+                            queryDictObj[objectNameKey].ExternalIds.push(removeNewLines(removeSpaces(row[idKey])));
                         } else if(row[recordNameKey]) {
-                            queryDictObj[objectNameKey].Names.push(row[recordNameKey]);
+                            queryDictObj[objectNameKey].Names.push(removeNewLines(row[recordNameKey]));
                         } else {
                             queryDictObj[objectNameKey].ExternalIds.push(`Error getting Id or Name for row: ${row.rowNumber}`);
                         }
@@ -234,9 +252,9 @@ const createDictObj = (configData, fileName, idKey, objTypeKey, recordNameKey, s
 
                 //TODO move to function
                 if(row[idKey]) {
-                    rowObj[objectNameKey].ExternalIds.push(removeSpaces(row[idKey]));   
+                    rowObj[objectNameKey].ExternalIds.push(removeNewLines(removeSpaces(row[idKey])));   
                 } else if(row[recordNameKey]){
-                    rowObj[objectNameKey].Names.push(row[recordNameKey]);
+                    rowObj[objectNameKey].Names.push(removeNewLines(row[recordNameKey]));
                 } else {
                     rowObj[objectNameKey].ExternalIds.push(`Error getting id or name for row: ${row.rowNumber}`);   
                 }
@@ -292,6 +310,16 @@ const createMetadata = (data, fileName) => {
 
         sortedMetadataKeys = sortMetadataDict(dictObj);
         createMetadataXmlFile(dictObj, sortedMetadataKeys, fileName);
+    }
+}
+
+async function createManualSteps(data, fileName) {
+    if(data.length > 0) {
+        try {
+           await createManualStepTextFile(data, fileName)
+        } catch(error) {
+            console.log(`createManualStepsFile ${error}`);
+        }
     }
 }
 
@@ -392,6 +420,22 @@ async function createXmlFile(dictObj, sortedMetadataKeys, fileName) {
     console.log('XML File created for Metadata');
 }
 
+async function createManualStepTextFile(data, fileName) {
+    let textFileString = `Manual Steps: ${fileName}\n\n`;
+    let divider1 = '_______________________________________'
+    let divider2 = '-------------------------'
+
+    data.forEach(rowObj => {
+        textFileString += `${divider1}\n\n${divider2}\n${rowObj.JiraTask}: ${rowObj.ManualStep}\n${divider2}\n\n`
+        if(rowObj.Directions) {
+            textFileString += `${rowObj.Directions}\n\n${divider2}\n\n${divider1}\n\n`
+        }
+    });
+
+    fs.writeFileSync(appConfig.manualStepsFilePath, textFileString);
+    console.log('Text File created for Manual Steps');
+}
+
 
 const createWhereClause = (queryString, data, divider1, divider2, hasIdsAndNames) => {
 
@@ -416,9 +460,9 @@ const creatChildObjectsList = (childObjDataObj) => {
     let keyCount = 0;
 
     for(let key in childObjDataObj) {
-        childObjInfoString += `${key}: `
+        childObjInfoString += `${removeSpaces(key)}: `
         childObjDataObj[key].childObjInfo.forEach(function (entry, i) {
-            childObjInfoString += i !== childObjDataObj[key].childObjInfo.length -1 ? `${entry}, ` : `${entry}\n`
+            childObjInfoString += i !== childObjDataObj[key].childObjInfo.length -1 ? `${entry}, ` : `${removeSpaces(entry)}\n`
         });
 
        keyCount += 1;
@@ -527,6 +571,10 @@ const createMetadataProfilesString = () => {
     });
 
     return profilesString += '\n';
+}
+
+const removeNewLines = (string) => {
+    return string.includes('\n') ? string.replace('\n', '') : string;
 }
 
 module.exports = {createQueries};

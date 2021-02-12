@@ -1,7 +1,8 @@
 {
-    "changelogFilePath" : "C:/Users/jclappsy/Desktop/Change_Log_Moodys_CAO_CV.xlsx",
-    "deployQueriesFilePath" : "C:/Users/jclappsy/Desktop/deployqueries.txt",
-    "deprecationQueriesFilePath" : "C:/Users/jclappsy/Desktop/deprecationQueries.txt",
-    "metadataFilePath" : "C:/Users/jclappsy/Desktop/",
+    "changelogFilePath" : "C:/Users/jclappsy/OneDrive - Forefront/Desktop/Change_Log_Moodys_CAO_CV.xlsx",
+    "deployQueriesFilePath" : "C:/Users/jclappsy/OneDrive - Forefront/Desktop/deployqueries.txt",
+    "deprecationQueriesFilePath" : "C:/Users/jclappsy/OneDrive - Forefront/Desktop/deprecationQueries.txt",
+    "metadataFilePath" : "C:/Users/jclappsy/OneDrive - Forefront/Desktop/",
+    "manualStepsFilePath" : "C:/Users/jclappsy/OneDrive - Forefront/Desktop/ManualSteps.txt",
     "apiVersion" : 47.0
 }
